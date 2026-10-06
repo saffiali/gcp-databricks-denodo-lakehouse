@@ -1,0 +1,87 @@
+-- =============================================================================
+-- Denodo 8.0 Virtual DataPort (VDP) — Single-Environment Bootstrap VQL
+-- =============================================================================
+-- Architectural Separation:
+--   1. Primary Lakehouse Compute & Medallion Tables: Databricks on GCP
+--      (queried via Simba Spark JDBC -> Serverless/Pro SQL Warehouse)
+--   2. Native Cache Engine ONLY: Google BigQuery (`denodo_vdp_cache`)
+--      (accelerated by 50 GB BI Engine + gRPC StorageReadAPI)
+-- =============================================================================
+
+CREATE OR REPLACE DATABASE rd_unified_vdb
+  'Enterprise R&D Data Mesh Semantic Virtualization Layer (Denodo 8.0 on GCP)';
+
+CONNECT DATABASE rd_unified_vdb;
+
+-- -----------------------------------------------------------------------------
+-- 1. JDBC Data Source -> Databricks on GCP Serverless/Pro SQL Warehouse
+-- -----------------------------------------------------------------------------
+CREATE OR REPLACE DATASOURCE JDBC ds_databricks_gcp_lakehouse
+  DRIVERCLASSNAME = 'com.simba.spark.jdbc.Driver'
+  DATABASEURI = 'jdbc:databricks://8259555750233451.1.gcp.databricks.com:443/rd_lakehouse_medallion;transportMode=http;ssl=1;AuthMech=3;UID=token;httpPath=/sql/1.0/warehouses/0154a901254a4f17'
+  USERNAME = 'token'
+  USERPASSWORD = '${DATABRICKS_OAUTH_OR_PAT_SECRET}' encrypted
+  CLASSPATH = 'simba-spark-jdbc-2.6.26'
+  DATABASENAME = 'databricks'
+  DATABASEVERSION = '14_3'
+  FETCHSIZE = 10000
+  VALIDATIONQUERY = 'SELECT 1'
+  INITIALSIZE = 4
+  MAXACTIVE = 50;
+
+-- -----------------------------------------------------------------------------
+-- 2. Native Cache Engine -> Google BigQuery (`denodo_vdp_cache` ONLY)
+--    Replaces legacy Snowflake cache with gRPC StorageReadAPI + BI Engine
+-- -----------------------------------------------------------------------------
+ALTER DATABASE rd_unified_vdb
+  CACHE CONFIG (
+    ENABLED = TRUE
+    DATASOURCE = ds_bigquery_vdp_cache
+    DRIVERCLASSNAME = 'com.simba.googlebigquery.jdbc.Driver'
+    DATABASEURI = 'jdbc:bigquery://https://www.googleapis.com/bigquery/v2:443;ProjectId=gke-demos-363017;OAuthType=3;DefaultDataset=denodo_vdp_cache;EnableHighThroughputAPI=1;HighThroughputActivationRatio=1;HighThroughputMinTableSize=100;'
+    MAINTENANCE = ON
+    TIMETOLIVE = 86400
+  );
+
+-- -----------------------------------------------------------------------------
+-- 3. Federated Cross-Domain Derived View (`dv_rd_molecule_360`)
+--    Joins Clinical Development (DDF), Real-World Data (RWD) & CMC Manufacturing
+--    with Dynamic GxP Study-Arm Blinding and Cross-Border Regulatory Filtering
+-- -----------------------------------------------------------------------------
+CREATE OR REPLACE VIEW dv_rd_molecule_360
+  FOLDER = '/03_derived_views/cross_domain'
+  CACHE FULL
+  TIMETOLIVEINCACHE = 86400
+  BATCHSIZEINCACHE = 50000
+AS SELECT
+    c.studyid,
+    c.molecule_id,
+    c.usubjid,
+    c.country,
+    c.region_code,
+    CASE
+      WHEN GETVAR('USER_ROLE') = 'UNBLINDED_DSMB_STATISTICIAN' THEN c.arm_unblinded_treatment
+      ELSE '***BLINDED-GXP*** (' || c.arm_blinded || ')'
+    END AS treatment_arm_governed,
+    m.comet_lot_id,
+    m.sap_batch_charg,
+    m.manufacturing_site,
+    m.purity_sec_hplc_pct,
+    m.bioreactor_titer_g_l,
+    b.ctdna_clearance_pct,
+    b.pd_l1_expression_pct,
+    b.clinical_response_recist,
+    r.rwd_synthetic_control_pfs_months
+FROM bv_databricks_silver_cdisc_dm_subjects c
+INNER JOIN bv_databricks_silver_cmc_batch_genealogy m
+  ON c.comet_lot_id = m.comet_lot_id
+  AND c.molecule_id = m.molecule_id
+INNER JOIN bv_databricks_silver_biomarker_pkpd b
+  ON c.usubjid = b.usubjid
+LEFT JOIN bv_databricks_silver_rwd_synthetic_control r
+  ON c.molecule_id = r.molecule_id
+WHERE (
+  GETVAR('CLIENT_JURISDICTION') = 'GLOBAL_EX_CN' AND c.region_code <> 'CN'
+) OR (
+  GETVAR('CLIENT_JURISDICTION') = 'CN_LOCAL_AUTHORIZED'
+);

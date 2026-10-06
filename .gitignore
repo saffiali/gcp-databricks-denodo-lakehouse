@@ -1,0 +1,23 @@
+# Terraform state & local provider caches
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+*.tfvars
+!*.tfvars.example
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraformrc
+terraform.rc
+tfplan
+
+# Python & local caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.cache/
+.env
+*.secret
