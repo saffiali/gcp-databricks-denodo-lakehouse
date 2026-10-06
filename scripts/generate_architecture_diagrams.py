@@ -64,11 +64,11 @@ def build_svg_1_end_to_end_horizontal(icons: dict[str, str]) -> str:
   <text x="52" y="100" class="badge">VPC SERVICE CONTROLS (VPC-SC) PERIMETER  |  ZERO PUBLIC IPs  |  restricted.googleapis.com (199.36.153.4/30)</text>
 
   <!-- ===================================================================== -->
-  <!-- HORIZONTAL LAYER 1 (TOP): DENODO 8.0 VDP SEMANTIC VIRTUALIZATION TIER -->
+  <!-- HORIZONTAL LAYER 1 (TOP): DENODO 8.0 TRIAL SERVER ON GKE TIER         -->
   <!-- ===================================================================== -->
   <rect x="36" y="118" width="1528" height="202" rx="12" fill="#f5f3ff" stroke="#8b5cf6" stroke-width="2" filter="url(#shadow)"/>
   <rect x="36" y="118" width="1528" height="34" rx="10" fill="#7c3aed"/>
-  <text x="54" y="140" class="badge" style="font-size:12px;">LAYER 1 — SEMANTIC VIRTUALIZATION &amp; DYNAMIC GOVERNANCE TIER: Denodo 8.0 VDP on GCP (modules/denodo_vdp_platform | snet-denodo-vdp 10.169.0.0/22)</text>
+  <text x="54" y="140" class="badge" style="font-size:12px;">LAYER 1 — SEMANTIC VIRTUALIZATION &amp; DYNAMIC GOVERNANCE TIER: Denodo 8.0 Trial Server on GKE (modules/denodo_vdp_platform | k8s/01..05)</text>
 
   <!-- Card 1A: Downstream R&D Consumers -->
   <rect x="52" y="164" width="340" height="142" rx="10" fill="#ffffff" stroke="#ddd6fe" stroke-width="1.5" filter="url(#shadow)"/>
@@ -80,26 +80,26 @@ def build_svg_1_end_to_end_horizontal(icons: dict[str, str]) -> str:
   <text x="68" y="264" class="card-mono">• CMC Batch Release &amp; Stability QA</text>
   <text x="68" y="282" class="card-mono">• GenAI Clinical &amp; Regulatory Assistants</text>
 
-  <!-- Card 1B: Internal Passthrough NLB -->
+  <!-- Card 1B: GKE Internal Passthrough NLB & Artifact Registry -->
   <rect x="410" y="164" width="346" height="142" rx="10" fill="#ffffff" stroke="#ddd6fe" stroke-width="1.5" filter="url(#shadow)"/>
   <image href="{icons['cloud_load_balancing']}" x="422" y="178" width="38" height="38"/>
-  <text x="470" y="188" class="card-title">1B. Internal Passthrough NLB</text>
-  <text x="470" y="204" class="card-mono">VIP: denodo-vdp-internal:9999</text>
-  <text x="426" y="228" class="card-body">• TCP :9999 (JDBC)  |  TCP :9996 (ODBC)</text>
-  <text x="426" y="246" class="card-body">• TCP :9443 (Design Studio &amp; Data Catalog)</text>
-  <text x="426" y="264" class="card-body">• TCP Health Check (15s interval, port 9999)</text>
-  <text x="426" y="282" class="card-mono">• Zero-Trust IAP Admin: 35.235.240.0/20</text>
+  <text x="470" y="188" class="card-title">1B. GKE Internal NLB &amp; Artifact Reg</text>
+  <text x="470" y="204" class="card-mono">Service: denodo-vdp-internal-lb</text>
+  <text x="426" y="226" class="card-body">• TCP :9999 (JDBC)  |  TCP :9996 (ODBC)</text>
+  <text x="426" y="244" class="card-body">• HTTP :9090 / :9443 (Design Studio &amp; Catalog)</text>
+  <text x="426" y="262" class="card-mono">• GAR Mirror: *-denodo-trial:8.0-trial</text>
+  <text x="426" y="280" class="card-mono">• 30-Day Trial Lic: Secret Manager (CMEK)</text>
 
-  <!-- Card 1C: Denodo 8.0 VDP Regional Multi-Zone MIG -->
+  <!-- Card 1C: Denodo 8.0 Trial Server on GKE (StatefulSet) -->
   <rect x="774" y="164" width="376" height="142" rx="10" fill="#ffffff" stroke="#7c3aed" stroke-width="2" filter="url(#shadow)"/>
-  <image href="{icons['compute_engine']}" x="786" y="178" width="38" height="38"/>
-  <text x="834" y="188" class="card-title">1C. Denodo 8.0 VDP Cluster (Regional MIG)</text>
-  <text x="834" y="204" class="card-mono">2x n4-standard-8 (Zones a &amp; b, Shielded VM)</text>
-  <text x="790" y="226" class="card-body">• vTPM + Secure Boot + 200 GB Hyperdisk (CMEK)</text>
-  <rect x="790" y="238" width="344" height="56" rx="6" fill="#f5f3ff" stroke="#c4b5fd"/>
-  <text x="800" y="255" class="card-title">Federated Cross-Domain Views (VQL):</text>
-  <text x="800" y="271" class="card-mono">• dv_rd_molecule_360 (4-Way Join: DDF+RWD+CMC)</text>
-  <text x="800" y="286" class="card-mono">• dv_cmc_clinical_lot_trace (ERP/LIMS -&gt; Trial)</text>
+  <image href="{icons['google_kubernetes_engine']}" x="786" y="178" width="38" height="38"/>
+  <text x="834" y="188" class="card-title">1C. Denodo 8.0 Trial Server on GKE</text>
+  <text x="834" y="204" class="card-mono">StatefulSet: denodo-vdp-trial (n4-standard-8)</text>
+  <text x="790" y="224" class="card-body">• GKE Workload Identity (denodo-vdp-ksa) + 100Gi PVC</text>
+  <rect x="790" y="234" width="344" height="62" rx="6" fill="#f5f3ff" stroke="#c4b5fd"/>
+  <text x="800" y="250" class="card-title">InitContainers &amp; VQL Bootstrap Job (k8s/05):</text>
+  <text x="800" y="266" class="card-mono">• Stages DatabricksJDBC42 &amp; GoogleBigQueryJDBC42</text>
+  <text x="800" y="281" class="card-mono">• Imports dv_rd_molecule_360 &amp; dv_cmc_lot_trace</text>
 
   <!-- Card 1D: Dynamic GxP Blinding & Cross-Border Policy Engine -->
   <rect x="1192" y="164" width="356" height="142" rx="10" fill="#ffffff" stroke="#ddd6fe" stroke-width="1.5" filter="url(#shadow)"/>
@@ -383,18 +383,18 @@ def build_svg_2_network_and_vpc_sc_horizontal(icons: dict[str, str]) -> str:
   <text x="50" y="460" class="card-body">• Outbound :5432 -&gt; Cloud SQL Hive Metastore</text>
   <text x="50" y="478" class="card-body">• Outbound :443  -&gt; restricted.googleapis.com</text>
 
-  <!-- Subnet B: Denodo VDP -->
+  <!-- Subnet B: Denodo Trial Server on GKE -->
   <rect x="424" y="316" width="372" height="188" rx="10" fill="#ffffff" stroke="#7c3aed" stroke-width="2" filter="url(#shadow)"/>
   <rect x="424" y="316" width="372" height="28" rx="8" fill="#7c3aed"/>
   <text x="436" y="335" class="badge">SUBNET B: snet-denodo-vdp (10.169.0.0/22)</text>
-  <image href="{icons['compute_engine']}" x="436" y="356" width="36" height="36"/>
-  <text x="482" y="368" class="card-title">Denodo 8.0 VDP Cluster (1,024 IPs)</text>
-  <text x="482" y="384" class="card-mono">Shielded VM MIG (n4-standard-8, a/b)</text>
-  <text x="482" y="400" class="card-mono">Internal NLB VIP (:9999/:9996/:9443)</text>
-  <text x="436" y="424" class="card-mono">• Tag: [denodo-vdp-node] | Zero Public IPs</text>
+  <image href="{icons['google_kubernetes_engine']}" x="436" y="356" width="36" height="36"/>
+  <text x="482" y="368" class="card-title">Denodo 8.0 Trial GKE Cluster (1,024 IPs)</text>
+  <text x="482" y="384" class="card-mono">GKE Pods: 10.178.0.0/18 (16,384 IPs)</text>
+  <text x="482" y="400" class="card-mono">GKE Svc:  10.179.0.0/20 (4,096 IPs)</text>
+  <text x="436" y="424" class="card-mono">• Tag: [denodo-gke-node] | Workload Identity</text>
   <text x="436" y="442" class="card-body">• Outbound :443 -&gt; Databricks PSC Endpoint</text>
   <text x="436" y="460" class="card-body">• Outbound :443 -&gt; BigQuery StorageReadAPI</text>
-  <text x="436" y="478" class="card-body">• Inbound :9999/:9443 from IAP &amp; internal BI</text>
+  <text x="436" y="478" class="card-body">• GKE Internal NLB (:9999 JDBC / :9090 UI)</text>
 
   <!-- Subnet C & D: PSC & ILB Proxy -->
   <rect x="810" y="316" width="372" height="188" rx="10" fill="#ffffff" stroke="#0284c7" stroke-width="2" filter="url(#shadow)"/>
@@ -435,15 +435,15 @@ def build_svg_2_network_and_vpc_sc_horizontal(icons: dict[str, str]) -> str:
   <text x="50" y="640" class="card-mono">Dest: 199.36.153.4/30</text>
   <text x="50" y="662" class="card-body">Allows private egress to</text>
   <text x="50" y="678" class="card-body">restricted.googleapis.com</text>
-  <text x="50" y="694" class="card-body">(GCS, BQ, KMS, Secret Mgr)</text>
+  <text x="50" y="694" class="card-body">(GCS, BQ, GAR, KMS, Secret Mgr)</text>
 
   <rect x="344" y="584" width="292" height="136" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
   <text x="356" y="604" class="card-title" style="fill:#1d4ed8;">Rule 2: Priority 150 (INGRESS)</text>
   <text x="356" y="622" class="card-mono" style="fill:#1e40af;">ALLOW tcp:443, 8443</text>
-  <text x="356" y="640" class="card-mono">Src: 10.169.0.0/22 (Denodo)</text>
+  <text x="356" y="640" class="card-mono">Src: 10.169/22, 10.178/18 (GKE)</text>
   <text x="356" y="662" class="card-body">Target: [databricks-worker]</text>
-  <text x="356" y="678" class="card-body">Permits Denodo 8.0 VDP Simba</text>
-  <text x="356" y="694" class="card-body">Spark JDBC query pushdown</text>
+  <text x="356" y="678" class="card-body">Permits Denodo Trial GKE pods</text>
+  <text x="356" y="694" class="card-body">Simba Spark JDBC pushdown</text>
 
   <rect x="650" y="584" width="296" height="136" rx="8" fill="#fff7ed" stroke="#f97316" stroke-width="1.5"/>
   <text x="662" y="604" class="card-title" style="fill:#c2410c;">Rule 3: Priority 200 (INGRESS)</text>
@@ -457,9 +457,9 @@ def build_svg_2_network_and_vpc_sc_horizontal(icons: dict[str, str]) -> str:
   <text x="972" y="604" class="card-title" style="fill:#6d28d9;">Rule 4: Priority 250 (INGRESS)</text>
   <text x="972" y="622" class="card-mono" style="fill:#5b21b6;">ALLOW tcp:22,9090,9443,9996,9999</text>
   <text x="972" y="640" class="card-mono">Src: 35.235.240.0/20 (IAP) &amp; HC</text>
-  <text x="972" y="662" class="card-body">Target: [denodo-vdp-node]</text>
-  <text x="972" y="678" class="card-body">Zero-Trust IAP admin, NLB</text>
-  <text x="972" y="694" class="card-body">health checks &amp; JDBC/ODBC</text>
+  <text x="972" y="662" class="card-body">Target: [denodo-gke-node]</text>
+  <text x="972" y="678" class="card-body">Zero-Trust IAP admin, GKE NLB</text>
+  <text x="972" y="694" class="card-body">health checks &amp; JDBC/Design Studio</text>
 
   <rect x="1270" y="584" width="292" height="136" rx="8" fill="#fef2f2" stroke="#dc2626" stroke-width="2"/>
   <text x="1282" y="604" class="card-title" style="fill:#b91c1c;">Rule 5: Priority 65534 (EGRESS)</text>

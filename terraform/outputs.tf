@@ -68,7 +68,27 @@ output "bigquery_denodo_cache_dataset" {
   value       = module.bigquery_biglake.denodo_cache_dataset_id
 }
 
+output "denodo_gke_cluster_name" {
+  description = "Private Regional GKE Cluster name hosting the Denodo 8.0 Trial Server StatefulSet."
+  value       = module.denodo_vdp_platform.denodo_gke_cluster_name
+}
+
+output "denodo_artifact_registry_uri" {
+  description = "Private Google Artifact Registry Docker/OCI image URI mirroring harbor.open.denodo.com for the Denodo Trial Server."
+  value       = module.denodo_vdp_platform.denodo_artifact_registry_uri
+}
+
 output "denodo_vdp_jdbc_endpoint" {
-  description = "Internal Passthrough NLB JDBC endpoint for Denodo 8.0 Virtual DataPort."
+  description = "Internal Passthrough LoadBalancer JDBC endpoint for the Denodo 8.0 Trial Server on GKE (:9999)."
   value       = module.denodo_vdp_platform.vdp_jdbc_endpoint
+}
+
+output "denodo_design_studio_url" {
+  description = "Internal LoadBalancer URL for Denodo Design Studio (:9090/denodo-design-studio)."
+  value       = module.denodo_vdp_platform.vdp_design_studio_url
+}
+
+output "denodo_data_catalog_url" {
+  description = "Internal LoadBalancer URL for Denodo Data Catalog / Marketplace (:9090/denodo-data-catalog)."
+  value       = module.denodo_vdp_platform.vdp_data_catalog_url
 }

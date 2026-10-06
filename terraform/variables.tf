@@ -53,9 +53,27 @@ variable "gke_services_cidr" {
 }
 
 variable "denodo_subnet_cidr" {
-  description = "Dedicated /22 subnet CIDR for the Denodo 8.0 VDP Semantic Virtualization cluster and Internal Passthrough NLB."
+  description = "Dedicated /22 primary subnet CIDR for the Denodo 8.0 Trial GKE Cluster nodes and Internal Passthrough LoadBalancer."
   type        = string
   default     = "10.169.0.0/22"
+}
+
+variable "denodo_gke_pods_cidr" {
+  description = "Secondary CIDR range (/18) on snet-denodo-vdp for Denodo 8.0 Trial GKE Cluster pods."
+  type        = string
+  default     = "10.178.0.0/18"
+}
+
+variable "denodo_gke_services_cidr" {
+  description = "Secondary CIDR range (/20) on snet-denodo-vdp for Denodo 8.0 Trial GKE Cluster services."
+  type        = string
+  default     = "10.179.0.0/20"
+}
+
+variable "denodo_gke_master_cidr" {
+  description = "Private /28 IPv4 CIDR block for the Denodo Trial GKE Control Plane master endpoint."
+  type        = string
+  default     = "172.16.0.16/28"
 }
 
 variable "psc_subnet_cidr" {
@@ -131,9 +149,15 @@ variable "hive_metastore_tier" {
 }
 
 variable "denodo_machine_type" {
-  description = "GCE machine family for Denodo 8.0 VDP cluster nodes (Next-Gen N4 family)."
+  description = "GKE node pool machine family for Denodo 8.0 Trial Server pods (Next-Gen N4 family)."
   type        = string
   default     = "n4-standard-8"
+}
+
+variable "denodo_container_image_tag" {
+  description = "Denodo Platform Trial Server container image tag mirrored from harbor.open.denodo.com into GCP Artifact Registry."
+  type        = string
+  default     = "8.0-trial"
 }
 
 variable "labels" {
@@ -143,7 +167,7 @@ variable "labels" {
     programme      = "rd-data-unification"
     architecture   = "databricks-denodo-gcp"
     lakehouse_tier = "medallion-hns"
-    virtualizer    = "denodo-8-vdp"
+    virtualizer    = "denodo-8-trial-gke"
     cache_engine   = "bigquery-native-cache"
     managed_by     = "terraform"
   }

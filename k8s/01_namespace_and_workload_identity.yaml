@@ -1,0 +1,38 @@
+# =============================================================================
+# 01. Denodo 8.0 Trial Server on GKE — Namespace, Workload Identity KSA & CMEK StorageClass
+# =============================================================================
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: denodo-trial
+  labels:
+    app.kubernetes.io/name: denodo-vdp-trial
+    app.kubernetes.io/part-of: rd-data-unification-lakehouse
+    pod-security.kubernetes.io/enforce: baseline
+    virtualizer: denodo-8-trial-gke
+    cache-engine: bigquery-native-cache
+---
+# Kubernetes Service Account bound to GCP Service Account via GKE Workload Identity
+# Zero static JSON service account keys are mounted inside the container.
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: denodo-vdp-ksa
+  namespace: denodo-trial
+  annotations:
+    iam.gke.io/gcp-service-account: "rd-lakehouse-denodo-vdp-mvp@gke-demos-363017.iam.gserviceaccount.com"
+  labels:
+    app.kubernetes.io/name: denodo-vdp-trial
+---
+# CMEK-Encrypted Hyperdisk Balanced StorageClass for StatefulSet VDP Metadata & Logs
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: denodo-hyperdisk-cmek
+provisioner: pd.csi.storage.gke.io
+parameters:
+  type: hyperdisk-balanced
+  disk-encryption-kms-key: "projects/gke-demos-363017/locations/europe-west2/keyRings/rd-lakehouse-keyring-europe-west2/cryptoKeys/rd-lakehouse-cmek-hns"
+volumeBindingMode: WaitForFirstConsumer
+allowVolumeExpansion: true
+reclaimPolicy: Retain

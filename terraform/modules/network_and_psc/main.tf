@@ -6,6 +6,9 @@ variable "vpc_subnet_cidr" { type = string }
 variable "gke_pods_cidr" { type = string }
 variable "gke_services_cidr" { type = string }
 variable "denodo_subnet_cidr" { type = string }
+variable "denodo_gke_pods_cidr" { type = string }
+variable "denodo_gke_services_cidr" { type = string }
+variable "denodo_gke_master_cidr" { type = string }
 variable "psc_subnet_cidr" { type = string }
 variable "ilb_proxy_subnet_cidr" { type = string }
 variable "access_policy_id" { type = string }
@@ -19,7 +22,7 @@ resource "google_compute_network" "single_env_vpc" {
   project                 = var.project_id
   auto_create_subnetworks = false
   routing_mode            = "REGIONAL"
-  description             = "Customer-managed Zero-Trust VPC segmented across Databricks on GCP, Denodo 8.0 VDP, and PSC endpoints"
+  description             = "Customer-managed Zero-Trust VPC segmented across Databricks on GCP, Denodo 8.0 Trial GKE Cluster, and PSC endpoints"
 }
 
 # -----------------------------------------------------------------------------
@@ -52,7 +55,7 @@ resource "google_compute_subnetwork" "databricks_compute_subnet" {
 }
 
 # -----------------------------------------------------------------------------
-# 3. Subnet B: Denodo 8.0 VDP Semantic Virtualization Tier (/22)
+# 3. Subnet B: Denodo 8.0 Trial Server on GKE Tier (/22 + GKE Secondary Ranges)
 # -----------------------------------------------------------------------------
 resource "google_compute_subnetwork" "denodo_vdp_subnet" {
   name                     = "${var.resource_prefix}-snet-denodo-vdp-${var.region}"
@@ -61,7 +64,17 @@ resource "google_compute_subnetwork" "denodo_vdp_subnet" {
   network                  = google_compute_network.single_env_vpc.id
   ip_cidr_range            = var.denodo_subnet_cidr
   private_ip_google_access = true
-  description              = "Dedicated /22 subnet for Denodo 8.0 VDP Shielded VM MIG and Internal Passthrough NLB"
+  description              = "Dedicated /22 subnet for Denodo 8.0 Trial Server on GKE (n4-standard-8 nodes + Internal Passthrough LoadBalancer)"
+
+  secondary_ip_range {
+    range_name    = "denodo-gke-pods-range"
+    ip_cidr_range = var.denodo_gke_pods_cidr
+  }
+
+  secondary_ip_range {
+    range_name    = "denodo-gke-services-range"
+    ip_cidr_range = var.denodo_gke_services_cidr
+  }
 
   log_config {
     aggregation_interval = "INTERVAL_5_SEC"
@@ -212,14 +225,14 @@ resource "google_compute_firewall" "allow_egress_restricted_googleapis" {
   }
 }
 
-# Priority 150: Allow Denodo 8.0 VDP -> Databricks SQL Warehouse PSC & Worker Nodes
+# Priority 150: Allow Denodo 8.0 Trial GKE Pods & Nodes -> Databricks SQL Warehouse PSC & Worker Nodes
 resource "google_compute_firewall" "allow_denodo_to_databricks_jdbc" {
   name          = "${var.resource_prefix}-fw-allow-denodo-to-databricks"
   project       = var.project_id
   network       = google_compute_network.single_env_vpc.name
   direction     = "INGRESS"
   priority      = 150
-  source_ranges = [var.denodo_subnet_cidr]
+  source_ranges = [var.denodo_subnet_cidr, var.denodo_gke_pods_cidr]
   target_tags   = ["databricks-worker"]
 
   allow {
@@ -249,7 +262,7 @@ resource "google_compute_firewall" "allow_databricks_internal_cluster" {
   target_tags = ["databricks-worker"]
 }
 
-# Priority 250: Allow IAP Zero-Trust Admin & GCP Health Checks -> Denodo 8.0 VDP
+# Priority 250: Allow IAP Zero-Trust Admin, GKE Control Plane & GCP Health Checks -> Denodo 8.0 Trial GKE Nodes
 resource "google_compute_firewall" "allow_iap_and_hc_to_denodo_vdp" {
   name      = "${var.resource_prefix}-fw-allow-iap-and-hc-to-denodo"
   project   = var.project_id
@@ -259,17 +272,19 @@ resource "google_compute_firewall" "allow_iap_and_hc_to_denodo_vdp" {
 
   allow {
     protocol = "tcp"
-    ports    = ["22", "9090", "9443", "9996", "9999"]
+    ports    = ["22", "8008", "9090", "9443", "9996", "9997", "9999", "10250"]
   }
 
   source_ranges = [
     "35.235.240.0/20",
     "130.211.0.0/22",
     "35.191.0.0/16",
+    var.denodo_gke_master_cidr,
     var.vpc_subnet_cidr,
     var.denodo_subnet_cidr,
+    var.denodo_gke_pods_cidr,
   ]
-  target_tags = ["denodo-vdp-node"]
+  target_tags = ["denodo-gke-node", "denodo-vdp-node"]
 }
 
 # -----------------------------------------------------------------------------

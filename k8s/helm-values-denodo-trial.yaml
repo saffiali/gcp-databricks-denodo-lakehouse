@@ -1,0 +1,91 @@
+# =============================================================================
+# Official Helm Chart Values for Denodo 8.0 / 9.0 Trial Server on GKE
+# Chart OCI: oci://harbor.open.denodo.com/denodo-8.0/charts/denodo-platform
+# Install:
+#   helm upgrade --install denodo-trial \
+#     oci://harbor.open.denodo.com/denodo-8.0/charts/denodo-platform \
+#     --namespace denodo-trial --create-namespace \
+#     -f k8s/helm-values-denodo-trial.yaml
+# =============================================================================
+image:
+  repository: "europe-west2-docker.pkg.dev/gke-demos-363017/rd-lakehouse-denodo-trial"
+  name: "denodo-platform"
+  tag: "8.0-trial"
+  pullPolicy: IfNotPresent
+  pullSecret: "denodo-registry-secret"
+
+  # Direct Harbor fallback for Trial / PoC environments
+  pullCredentials:
+    enabled: false
+    name: "denodo-registry-secret"
+    registry: "harbor.open.denodo.com"
+    username: "<denodo-community-or-partner-username>"
+    pwd: "<denodo-harbor-oidc-cli-secret>"
+
+# Standalone 30-Day Trial License mounted from Kubernetes Secret (sourced from GCP Secret Manager)
+license:
+  mode: "standalone"
+  secretName: "denodo-trial-license-secret"
+  secretKey: "denodo.lic"
+
+serviceAccount:
+  create: false
+  name: "denodo-vdp-ksa"
+  annotations:
+    iam.gke.io/gcp-service-account: "rd-lakehouse-denodo-vdp-mvp@gke-demos-363017.iam.gserviceaccount.com"
+
+virtualDataPort:
+  enabled: true
+  replicaCount: 1
+  nodeSelector:
+    workload: "denodo-vdp-trial"
+  resources:
+    requests:
+      cpu: "4000m"
+      memory: "16Gi"
+    limits:
+      cpu: "7000m"
+      memory: "28Gi"
+  persistence:
+    enabled: true
+    storageClass: "denodo-hyperdisk-cmek"
+    size: "100Gi"
+
+  # Cache Engine: Strictly Google BigQuery (denodo_vdp_cache + 50 GB BI Engine + StorageReadAPI)
+  cache:
+    enabled: true
+    adapter: "bigquery"
+    bigquery:
+      projectId: "gke-demos-363017"
+      datasetId: "denodo_vdp_cache"
+      location: "EU"
+      enableHighThroughputAPI: true
+      useWorkloadIdentity: true
+      gcsStagingBucket: "gs://gke-demos-363017-rd-lakehouse-hns-denodo-cache/bq_staging/"
+
+  # Primary Lakehouse Pushdown Target: Databricks on GCP SQL Warehouse over PSC (:443)
+  databricksPushdown:
+    enabled: true
+    workspaceId: "8259555750233451"
+    warehouseId: "0154a901254a4f17"
+    jdbcUrl: "jdbc:spark://8259555750233451.1.gcp.databricks.com:443/default;transportMode=http;ssl=1;httpPath=sql/protocolv1/o/8259555750233451/0154a901254a4f17;AuthMech=3;UID=token"
+
+designStudio:
+  enabled: true
+  contextPath: "/denodo-design-studio"
+
+dataCatalog:
+  enabled: true
+  contextPath: "/denodo-data-catalog"
+
+service:
+  type: LoadBalancer
+  annotations:
+    networking.gke.io/load-balancer-type: "Internal"
+    networking.gke.io/internal-load-balancer-subnet: "rd-lakehouse-snet-denodo-vdp-europe-west2"
+    networking.gke.io/load-balancer-ip-addresses: "rd-lakehouse-denodo-gke-ilb-ip"
+  ports:
+    vdpJdbc: 9999
+    vdpOdbc: 9996
+    webHttp: 9090
+    webHttps: 9443

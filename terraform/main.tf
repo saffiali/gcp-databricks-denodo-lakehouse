@@ -14,18 +14,21 @@ provider "google-beta" {
 module "network_and_psc" {
   source = "./modules/network_and_psc"
 
-  project_id            = var.project_id
-  region                = var.region
-  environment           = var.environment
-  resource_prefix       = var.resource_prefix
-  vpc_subnet_cidr       = var.vpc_subnet_cidr
-  gke_pods_cidr         = var.gke_pods_cidr
-  gke_services_cidr     = var.gke_services_cidr
-  denodo_subnet_cidr    = var.denodo_subnet_cidr
-  psc_subnet_cidr       = var.psc_subnet_cidr
-  ilb_proxy_subnet_cidr = var.ilb_proxy_subnet_cidr
-  access_policy_id      = var.access_policy_id
-  labels                = var.labels
+  project_id               = var.project_id
+  region                   = var.region
+  environment              = var.environment
+  resource_prefix          = var.resource_prefix
+  vpc_subnet_cidr          = var.vpc_subnet_cidr
+  gke_pods_cidr            = var.gke_pods_cidr
+  gke_services_cidr        = var.gke_services_cidr
+  denodo_subnet_cidr       = var.denodo_subnet_cidr
+  denodo_gke_pods_cidr     = var.denodo_gke_pods_cidr
+  denodo_gke_services_cidr = var.denodo_gke_services_cidr
+  denodo_gke_master_cidr   = var.denodo_gke_master_cidr
+  psc_subnet_cidr          = var.psc_subnet_cidr
+  ilb_proxy_subnet_cidr    = var.ilb_proxy_subnet_cidr
+  access_policy_id         = var.access_policy_id
+  labels                   = var.labels
 }
 
 # -----------------------------------------------------------------------------
@@ -102,22 +105,24 @@ module "bigquery_biglake" {
 }
 
 # -----------------------------------------------------------------------------
-# 6. Denodo 8.0 VDP Virtualization Cluster on GCP (Shielded MIG + Internal NLB)
+# 6. Denodo 8.0 Trial Server on GKE (Private GKE + Artifact Registry + ILB)
 # -----------------------------------------------------------------------------
 module "denodo_vdp_platform" {
   source = "./modules/denodo_vdp_platform"
 
-  project_id              = var.project_id
-  region                  = var.region
-  environment             = var.environment
-  resource_prefix         = var.resource_prefix
-  vpc_id                  = module.network_and_psc.vpc_id
-  subnet_id               = module.network_and_psc.denodo_subnet_id
-  denodo_machine_type     = var.denodo_machine_type
-  denodo_cache_dataset_id = module.bigquery_biglake.denodo_cache_dataset_id
-  lakehouse_bucket_name   = module.gcs_hns_lakehouse.lakehouse_bucket_name
-  denodo_cache_bucket     = module.gcs_hns_lakehouse.denodo_delta_cache_bucket_name
-  databricks_jdbc_url     = module.databricks_workspace.sql_warehouse_jdbc_url
-  kms_crypto_key_id       = module.gcs_hns_lakehouse.kms_crypto_key_id
-  labels                  = var.labels
+  project_id                 = var.project_id
+  region                     = var.region
+  environment                = var.environment
+  resource_prefix            = var.resource_prefix
+  vpc_id                     = module.network_and_psc.vpc_id
+  subnet_id                  = module.network_and_psc.denodo_subnet_id
+  denodo_gke_master_cidr     = var.denodo_gke_master_cidr
+  denodo_machine_type        = var.denodo_machine_type
+  denodo_container_image_tag = var.denodo_container_image_tag
+  denodo_cache_dataset_id    = module.bigquery_biglake.denodo_cache_dataset_id
+  lakehouse_bucket_name      = module.gcs_hns_lakehouse.lakehouse_bucket_name
+  denodo_cache_bucket        = module.gcs_hns_lakehouse.denodo_delta_cache_bucket_name
+  databricks_jdbc_url        = module.databricks_workspace.sql_warehouse_jdbc_url
+  kms_crypto_key_id          = module.gcs_hns_lakehouse.kms_crypto_key_id
+  labels                     = var.labels
 }

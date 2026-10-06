@@ -1,0 +1,63 @@
+# =============================================================================
+# 04. Denodo 8.0 Trial Server on GKE — Headless Service & Internal Passthrough NLB
+# =============================================================================
+apiVersion: v1
+kind: Service
+metadata:
+  name: denodo-vdp-headless
+  namespace: denodo-trial
+  labels:
+    app.kubernetes.io/name: denodo-vdp-trial
+spec:
+  clusterIP: None
+  selector:
+    app.kubernetes.io/name: denodo-vdp-trial
+  ports:
+    - name: vdp-jdbc
+      port: 9999
+      targetPort: 9999
+    - name: vdp-odbc
+      port: 9996
+      targetPort: 9996
+    - name: web-http
+      port: 9090
+      targetPort: 9090
+    - name: web-https
+      port: 9443
+      targetPort: 9443
+---
+# GKE Internal Passthrough Network Load Balancer (snet-denodo-vdp 10.169.0.0/22)
+# Zero public IP exposure — reachable solely inside VPC-SC & via IAP TCP Tunnel
+apiVersion: v1
+kind: Service
+metadata:
+  name: denodo-vdp-internal-lb
+  namespace: denodo-trial
+  annotations:
+    networking.gke.io/load-balancer-type: "Internal"
+    networking.gke.io/internal-load-balancer-subnet: "rd-lakehouse-snet-denodo-vdp-europe-west2"
+    networking.gke.io/load-balancer-ip-addresses: "rd-lakehouse-denodo-gke-ilb-ip"
+  labels:
+    app.kubernetes.io/name: denodo-vdp-trial
+spec:
+  type: LoadBalancer
+  externalTrafficPolicy: Local
+  selector:
+    app.kubernetes.io/name: denodo-vdp-trial
+  ports:
+    - name: vdp-jdbc
+      port: 9999
+      targetPort: 9999
+      protocol: TCP
+    - name: vdp-odbc
+      port: 9996
+      targetPort: 9996
+      protocol: TCP
+    - name: design-studio-and-catalog-http
+      port: 9090
+      targetPort: 9090
+      protocol: TCP
+    - name: design-studio-and-catalog-https
+      port: 9443
+      targetPort: 9443
+      protocol: TCP

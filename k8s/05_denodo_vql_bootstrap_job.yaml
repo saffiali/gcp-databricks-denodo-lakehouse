@@ -1,0 +1,67 @@
+# =============================================================================
+# 05. Denodo 8.0 Trial Server on GKE — Automated VQL Catalog Bootstrap Job
+#     Waits for denodo-vdp-trial-0:9999 and imports sql/01_denodo_vql_bootstrap.vql:
+#       1. Databricks SQL Warehouse JDBC Data Source (0154a901254a4f17)
+#       2. Google BigQuery Native Cache Engine (denodo_vdp_cache + 50 GB BI Engine)
+#       3. Federated R&D Views (dv_rd_molecule_360, dv_cmc_clinical_lot_trace)
+#       4. Dynamic GxP Blinding (***BLINDED-GXP***) & Cross-Border Row Filters
+# =============================================================================
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: denodo-vql-catalog-bootstrap
+  namespace: denodo-trial
+  labels:
+    app.kubernetes.io/name: denodo-vdp-trial
+    app.kubernetes.io/component: vql-bootstrap
+spec:
+  backoffLimit: 3
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: denodo-vdp-trial
+        app.kubernetes.io/component: vql-bootstrap
+    spec:
+      serviceAccountName: denodo-vdp-ksa
+      restartPolicy: OnFailure
+      imagePullSecrets:
+        - name: denodo-registry-secret
+      containers:
+        - name: vql-import-runner
+          image: europe-west2-docker.pkg.dev/gke-demos-363017/rd-lakehouse-denodo-trial/denodo-platform:8.0-trial
+          command:
+            - /bin/bash
+            - -c
+            - |
+              set -euo pipefail
+              VDP_HOST="denodo-vdp-trial-0.denodo-vdp-headless.denodo-trial.svc.cluster.local"
+              echo "[VQL-Bootstrap] Waiting for Denodo 8.0 Trial VDP Server at ${VDP_HOST}:9999..."
+              until timeout 3 bash -c "</dev/tcp/${VDP_HOST}/9999" 2>/dev/null; do
+                sleep 5
+              done
+              echo "[VQL-Bootstrap] VDP Server port 9999 is accepting connections."
+              echo "[VQL-Bootstrap] Importing 01_denodo_vql_bootstrap.vql (Databricks JDBC + BigQuery Native Cache + GxP Blinding)..."
+              /opt/denodo/bin/import.sh \
+                -h "${VDP_HOST}?${DENODO_ADMIN_USER}@${DENODO_ADMIN_PASSWORD}" \
+                -p 9999 \
+                -f /bootstrap-vql/01_denodo_vql_bootstrap.vql
+              echo "[VQL-Bootstrap] Denodo 8.0 Trial Server VQL catalog bootstrap completed successfully."
+          env:
+            - name: DENODO_ADMIN_USER
+              valueFrom:
+                secretKeyRef:
+                  name: denodo-admin-credentials
+                  key: DENODO_ADMIN_USER
+            - name: DENODO_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: denodo-admin-credentials
+                  key: DENODO_ADMIN_PASSWORD
+          volumeMounts:
+            - name: vql-bootstrap-vol
+              mountPath: /bootstrap-vql
+              readOnly: true
+      volumes:
+        - name: vql-bootstrap-vol
+          configMap:
+            name: denodo-vql-bootstrap-cm
