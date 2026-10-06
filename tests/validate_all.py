@@ -137,16 +137,23 @@ def run_checks() -> int:
         "Shielded MIG + Internal NLB + dynamic GxP blinding verified",
     )
 
-    # 10. Check SVG & PNG Architecture Diagrams in assets/
+    # 10. Check Horizontal-Layered SVG & PNG Architecture Diagrams in assets/
     svg_files = [
         "01_end_to_end_lakehouse_and_denodo_architecture.svg",
         "02_zero_trust_network_and_vpc_sc_topology.svg",
         "03_storage_accounts_and_hns_folder_governance.svg",
     ]
+    png_files = [f.replace(".svg", ".png") for f in svg_files]
+    all_horizontal = all(
+        (REPO_ROOT / "assets" / f).is_file()
+        and "Horizontal Layered View" in (REPO_ROOT / "assets" / f).read_text(encoding="utf-8")
+        and "HORIZONTAL LAYER 1" in (REPO_ROOT / "assets" / f).read_text(encoding="utf-8")
+        for f in svg_files
+    ) and all((REPO_ROOT / "assets" / p).is_file() for p in png_files)
     record(
-        "Publication-Grade SVG & PNG Architecture Diagrams in assets/",
-        all((REPO_ROOT / "assets" / f).is_file() for f in svg_files),
-        "3 SVG + 3 PNG + 2 JPG diagrams verified",
+        "Horizontal-Layered SVG & PNG Architecture Diagrams in assets/",
+        all_horizontal,
+        "3 Horizontal-Layered SVG + 3 High-DPI PNG blueprints verified",
     )
 
     # 11. Verify ZERO forbidden customer terms or PAT secrets across the entire repo

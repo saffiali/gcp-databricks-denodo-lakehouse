@@ -28,35 +28,58 @@ The architecture enforces a strict, unambiguous separation across five core infr
 
 ---
 
-## 🗺️ Visual Reference Architecture Blueprints
+## 🗺️ Visual Reference Architecture Blueprints (Horizontal Layered View)
 
-### 1. End-to-End Single-Environment Reference Architecture
+All visual architecture diagrams are structured as **full-width Horizontal Architectural Layers** stacked top-to-bottom (`Consumer & Virtualization Tier` $\rightarrow$ `BigQuery Native Denodo Cache Layer` $\rightarrow$ `Databricks on GCP Compute & Metastore Tier` $\rightarrow$ `GCS HNS Storage Accounts & 30-Yr GxP WORM Tier`).
 
-![End-to-End Single-Environment Reference Architecture](./assets/01_end_to_end_lakehouse_and_denodo_architecture.svg)
+### 1. End-to-End Single-Environment Reference Architecture (4 Horizontal Layers)
+
+- **Layer 1 (Top Horizontal Band — Denodo 8.0 VDP Semantic Virtualization & Dynamic Governance):** Enterprise R&D Consumers (`1A`) connect through the Internal Passthrough NLB (`1B`, `:9999` JDBC / `:9996` ODBC / `:9443` HTTPS) to the multi-zone Denodo 8.0 VDP cluster (`1C`, `2x n4-standard-8` Shielded VMs), which enforces runtime **GxP Study-Arm Blinding (`***BLINDED-GXP***`)** and **Cross-Border Regulatory Row Filtering (`region_code <> 'CN'`)** (`1D`).
+- **Layer 2 (Second Horizontal Band — Denodo Native Caching Layer ONLY on Google BigQuery):** Provisioned strictly and exclusively as the Denodo 8.0 VDP Native Cache Engine (`2A`), storing clustered materialized cache tables in `denodo_vdp_cache` (`2B`) accelerated by a **50 GB BI Engine** reservation and **gRPC `StorageReadAPI` (`EnableHighThroughputAPI=1`)** (`2C`), achieving **`1,077.2 ms` (`6.31x` speedup)** (`2D`).
+- **Layer 3 (Third Horizontal Band — Primary Lakehouse Compute & Metastore Tier on Databricks on GCP):** Unity Catalog (`3A`), Next-Gen GCE Compute Pools (`3B`: `N4`, `C4`, `M3`, `Z3`), Serverless/Pro SQL Warehouse (`3C`, Photon over PSC `:443`), and the External Hive Metastore on Regional HA Cloud SQL for PostgreSQL 15 (`3D`, with `abfss://` $\rightarrow$ `gs://` `SDS.LOCATION` URI rewrite).
+- **Layer 4 (Bottom Horizontal Band — Storage Accounts, KMS CMEK, GCS HNS Medallion Lakehouse & 30-Yr GxP WORM):** 7 dedicated zero-key GCP Service Accounts + 90-day KMS CMEK (`4A`), Primary HNS Medallion Lakehouse bucket with 12 subfolder-scoped managed folders (`4B`), Cross-Cloud STS Landing & Denodo Delta Cache buckets (`4C`), and the 30-Year GxP WORM Archive bucket (`4D`, `retention_period = 946728000s`).
+
+![End-to-End Single-Environment Reference Architecture (Horizontal Layered View)](./assets/01_end_to_end_lakehouse_and_denodo_architecture.svg)
 
 <details>
-<summary><b>View High-Level Executive Overview Diagram (Raster Preview)</b></summary>
+<summary><b>View High-Resolution PNG Render (01_end_to_end_lakehouse_and_denodo_architecture.png)</b></summary>
 
-![Executive Architecture Overview](./assets/gcp_databricks_denodo_overview.jpg)
+![End-to-End Single-Environment Reference Architecture PNG](./assets/01_end_to_end_lakehouse_and_denodo_architecture.png)
 
 </details>
 
 ---
 
-### 2. Zero-Trust Network Controls, Multi-Subnet Segmentation & VPC-SC Perimeter
+### 2. Zero-Trust Network Controls, Multi-Subnet Segmentation & VPC-SC Perimeter (4 Horizontal Layers)
 
-![Zero-Trust Network Controls & VPC-SC Topology](./assets/02_zero_trust_network_and_vpc_sc_topology.svg)
+- **Layer 1 (Top Horizontal Band — Zero-Trust Ingress & Blocked Public Internet Boundary):** Identity-Aware Proxy (`35.235.240.0/20`), GCP NLB Health Probers (`130.211.0.0/22`, `35.191.0.0/16`), and blocked `0.0.0.0/0` internet egress.
+- **Layer 2 (Second Horizontal Band — Customer-Managed VPC & 4 Segmented Subnets):** `snet-databricks` (`10.168.0.0/19` + GKE Pods `/16` & Services `/20`), `snet-denodo-vdp` (`10.169.0.0/22`), `snet-psc` (`10.169.4.0/24`) & `snet-ilb-proxy` (`10.169.5.0/24`), plus Private Service Access (`/20`) and Private Cloud DNS (`*.googleapis.com` $\rightarrow$ `restricted.googleapis.com`).
+- **Layer 3 (Third Horizontal Band — Zero-Trust Firewall Policy Layer):** 5 priority-ordered ingress and egress firewall rules (`Priority 100`, `150`, `200`, `250`, and `65534` deny-all internet egress with `INCLUDE_ALL_METADATA`).
+- **Layer 4 (Bottom Horizontal Band — Restricted Google APIs VIP `199.36.153.4/30` & VPC-SC Protected Services):** `storage.googleapis.com`, `bigquery.googleapis.com`, `bigquerystorage.googleapis.com`, `cloudkms.googleapis.com`, `secretmanager.googleapis.com`, `container.googleapis.com`, `sqladmin.googleapis.com`, and `file.googleapis.com`.
+
+![Zero-Trust Network Controls & VPC-SC Topology (Horizontal Layered View)](./assets/02_zero_trust_network_and_vpc_sc_topology.svg)
+
+<details>
+<summary><b>View High-Resolution PNG Render (02_zero_trust_network_and_vpc_sc_topology.png)</b></summary>
+
+![Zero-Trust Network Controls & VPC-SC Topology PNG](./assets/02_zero_trust_network_and_vpc_sc_topology.png)
+
+</details>
 
 ---
 
-### 3. Storage Accounts (Zero-Key Service Accounts) & GCS HNS Managed Folder Governance
+### 3. Storage Accounts (Zero-Key Service Accounts) & GCS HNS Managed Folder Governance (3 Horizontal Layers)
 
-![Storage Accounts & GCS HNS Managed Folder Hierarchy](./assets/03_storage_accounts_and_hns_folder_governance.svg)
+- **Layer 1 (Top Horizontal Band — Identity & Encryption Tier):** 7 dedicated zero-key GCP Service Accounts (`sa-sts-ingest`, `sa-uc-master`, `sa-clinical-ddf`, `sa-rwd-cohorts`, `sa-cmc-mfg`, `sa-denodo-vdp`, `sa-filestore`) and 90-day Cloud KMS CMEK (`crypto-key-lakehouse-hns`).
+- **Layer 2 (Middle Horizontal Band — Primary GCS HNS Medallion Lakehouse Bucket):** Horizontal **Bronze**, **Silver**, and **Gold** Medallion rows across the 3 R&D Data Mesh domains (`clinical_ddf`, `real_world_data`, `cmc_manufacturing`) plus shared system managed folders (`_unity_catalog/`, `_checkpoints/`, `_quarantine/`).
+- **Layer 3 (Bottom Horizontal Band — Companion Storage & 30-Year GxP WORM Tier):** Cross-Cloud STS Landing bucket, Denodo Delta Cache HNS bucket, 30-Year GxP WORM Archive bucket (`946,728,000s`), and optional Filestore Enterprise NFSv4.1 scratch share.
+
+![Storage Accounts & GCS HNS Managed Folder Hierarchy (Horizontal Layered View)](./assets/03_storage_accounts_and_hns_folder_governance.svg)
 
 <details>
-<summary><b>View Network & Storage Governance Overview (Raster Preview)</b></summary>
+<summary><b>View High-Resolution PNG Render (03_storage_accounts_and_hns_folder_governance.png)</b></summary>
 
-![Network and Storage Governance Overview](./assets/gcp_network_storage_governance.jpg)
+![Storage Accounts & GCS HNS Managed Folder Hierarchy PNG](./assets/03_storage_accounts_and_hns_folder_governance.png)
 
 </details>
 

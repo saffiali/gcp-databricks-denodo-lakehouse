@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
-"""Generates publication-grade SVG architecture diagrams with embedded official Google Cloud icons."""
+"""Generates publication-grade HORIZONTAL-LAYERED SVG architecture diagrams with embedded official Google Cloud icons."""
 
 import base64
 import pathlib
-import shutil
 
 ICON_DIR = pathlib.Path(
     "/google/src/cloud/saffi/databricks_denodo_gcp_demo/google3/"
@@ -22,31 +21,28 @@ def load_icon_data_uri(name: str) -> str:
     return f"data:image/png;base64,{b64}"
 
 
-def build_svg_1_end_to_end(icons: dict[str, str]) -> str:
-    return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1560 920" width="100%" height="100%">
+def build_svg_1_end_to_end_horizontal(icons: dict[str, str]) -> str:
+    return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1040" width="100%" height="100%">
   <defs>
     <style>
       .title {{ font: 700 22px 'Google Sans', 'Inter', 'Segoe UI', Arial, sans-serif; fill: #0f172a; }}
       .subtitle {{ font: 500 13px 'Google Sans', 'Inter', 'Segoe UI', Arial, sans-serif; fill: #475569; }}
-      .zone-hdr {{ font: 700 14px 'Google Sans', 'Inter', 'Segoe UI', Arial, sans-serif; fill: #1e293b; letter-spacing: 0.4px; }}
-      .zone-sub {{ font: 600 11px 'Roboto Mono', monospace; fill: #475569; }}
       .card-title {{ font: 700 13px 'Google Sans', 'Inter', 'Segoe UI', Arial, sans-serif; fill: #0f172a; }}
       .card-body {{ font: 500 11px 'Google Sans', 'Inter', 'Segoe UI', Arial, sans-serif; fill: #334155; }}
-      .card-mono {{ font: 600 10.5px 'Roboto Mono', monospace; fill: #0f172a; }}
-      .badge {{ font: 700 10px 'Roboto Mono', monospace; fill: #ffffff; }}
-      .edge-lbl {{ font: 700 10.5px 'Roboto Mono', monospace; fill: #1e293b; }}
+      .card-mono {{ font: 600 10.2px 'Roboto Mono', monospace; fill: #0f172a; }}
+      .badge {{ font: 700 10.5px 'Roboto Mono', monospace; fill: #ffffff; }}
     </style>
-    <filter id="shadow" x="-4%" y="-4%" width="108%" height="110%">
-      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#0f172a" flood-opacity="0.08"/>
+    <filter id="shadow" x="-2%" y="-4%" width="104%" height="110%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0f172a" flood-opacity="0.07"/>
     </filter>
+    <marker id="arrow-purple" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#7c3aed"/>
+    </marker>
     <marker id="arrow-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-      <path d="M 0 1 L 10 5 L 0 9 z" fill="#1a73e8"/>
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#1d4ed8"/>
     </marker>
     <marker id="arrow-orange" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
       <path d="M 0 1 L 10 5 L 0 9 z" fill="#ea580c"/>
-    </marker>
-    <marker id="arrow-purple" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-      <path d="M 0 1 L 10 5 L 0 9 z" fill="#7c3aed"/>
     </marker>
     <marker id="arrow-green" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
       <path d="M 0 1 L 10 5 L 0 9 z" fill="#059669"/>
@@ -54,624 +50,722 @@ def build_svg_1_end_to_end(icons: dict[str, str]) -> str:
   </defs>
 
   <!-- Canvas Background -->
-  <rect width="1560" height="920" rx="16" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
+  <rect width="1600" height="1040" rx="16" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
 
   <!-- Top Header Banner -->
-  <rect x="20" y="18" width="1520" height="68" rx="12" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5" filter="url(#shadow)"/>
-  <rect x="20" y="18" width="10" height="68" rx="4" fill="#1a73e8"/>
-  <text x="48" y="48" class="title">Single-Environment Enterprise Reference Architecture: Databricks on GCP + Denodo 8.0 VDP + BigQuery Cache</text>
-  <text x="48" y="70" class="subtitle">Zero-Trust VPC-SC Perimeter  |  GCS Hierarchical Namespace (HNS) &amp; 30-Yr GxP WORM  |  Databricks Medallion Lakehouse  |  Denodo Semantic Layer  |  BigQuery Native Cache Engine ONLY</text>
+  <rect x="20" y="16" width="1560" height="64" rx="12" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="20" y="16" width="10" height="64" rx="4" fill="#1a73e8"/>
+  <text x="46" y="44" class="title">Single-Environment Enterprise Reference Architecture (Horizontal Layered View)</text>
+  <text x="46" y="65" class="subtitle">Layer 1: Denodo 8.0 VDP Semantic Virtualization  |  Layer 2: BigQuery Native Denodo Cache ONLY  |  Layer 3: Databricks on GCP Lakehouse  |  Layer 4: GCS HNS &amp; 30-Yr GxP WORM</text>
 
   <!-- Outer VPC-SC Perimeter Box -->
-  <rect x="20" y="102" width="1520" height="796" rx="14" fill="#f1f5f9" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="10,6"/>
-  <rect x="40" y="91" width="660" height="24" rx="6" fill="#dc2626"/>
-  <text x="52" y="107" class="badge">VPC SERVICE CONTROLS (VPC-SC) PERIMETER  |  ZERO PUBLIC IPs  |  restricted.googleapis.com (199.36.153.4/30)</text>
+  <rect x="20" y="96" width="1560" height="926" rx="14" fill="#f1f5f9" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="10,6"/>
+  <rect x="40" y="85" width="710" height="22" rx="6" fill="#dc2626"/>
+  <text x="52" y="100" class="badge">VPC SERVICE CONTROLS (VPC-SC) PERIMETER  |  ZERO PUBLIC IPs  |  restricted.googleapis.com (199.36.153.4/30)</text>
 
   <!-- ===================================================================== -->
-  <!-- SWIMLANE 1: STORAGE ACCOUNTS, KMS CMEK & GCS HNS LAKEHOUSE (LEFT)     -->
+  <!-- HORIZONTAL LAYER 1 (TOP): DENODO 8.0 VDP SEMANTIC VIRTUALIZATION TIER -->
   <!-- ===================================================================== -->
-  <rect x="38" y="128" width="350" height="752" rx="12" fill="#ecfdf5" stroke="#10b981" stroke-width="2" filter="url(#shadow)"/>
-  <rect x="38" y="128" width="350" height="44" rx="12" fill="#059669"/>
-  <text x="54" y="148" class="badge" style="font-size:12.5px;">1. STORAGE ACCOUNTS &amp; GCS HNS TIER</text>
-  <text x="54" y="164" class="badge" style="font-weight:500;fill:#d1fae5;">modules/gcs_hns_lakehouse (CMEK + HNS + WORM)</text>
+  <rect x="36" y="118" width="1528" height="202" rx="12" fill="#f5f3ff" stroke="#8b5cf6" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="36" y="118" width="1528" height="34" rx="10" fill="#7c3aed"/>
+  <text x="54" y="140" class="badge" style="font-size:12px;">LAYER 1 — SEMANTIC VIRTUALIZATION &amp; DYNAMIC GOVERNANCE TIER: Denodo 8.0 VDP on GCP (modules/denodo_vdp_platform | snet-denodo-vdp 10.169.0.0/22)</text>
 
-  <!-- Card 1A: 7 Least-Privilege Service Accounts + KMS CMEK -->
-  <rect x="54" y="186" width="318" height="122" rx="10" fill="#ffffff" stroke="#a7f3d0" stroke-width="1.5" filter="url(#shadow)"/>
-  <image href="{icons['identity_and_access_management']}" x="66" y="198" width="38" height="38"/>
-  <image href="{icons['key_management_service']}" x="66" y="246" width="38" height="38"/>
-  <text x="116" y="210" class="card-title">7 Dedicated GCP Service Accounts</text>
-  <text x="116" y="226" class="card-body">Zero static keys (IAM Impersonation only)</text>
-  <text x="116" y="242" class="card-mono">sa-sts | sa-uc-master | sa-denodo-vdp</text>
-  <text x="116" y="257" class="card-mono">sa-clinical | sa-rwd | sa-cmc | sa-dbx</text>
-  <text x="116" y="276" class="card-title">Cloud KMS CMEK (90-Day Rotation)</text>
-  <text x="116" y="292" class="card-body">Encrypts GCS, Cloud SQL, BigQuery &amp; Disks</text>
+  <!-- Card 1A: Downstream R&D Consumers -->
+  <rect x="52" y="164" width="340" height="142" rx="10" fill="#ffffff" stroke="#ddd6fe" stroke-width="1.5" filter="url(#shadow)"/>
+  <image href="{icons['virtual_private_cloud']}" x="64" y="178" width="36" height="36"/>
+  <text x="110" y="188" class="card-title">1A. Enterprise R&amp;D Consumers</text>
+  <text x="110" y="204" class="card-body">Zero SQL or application code changes</text>
+  <text x="68" y="228" class="card-mono">• Translational Medicine BI Dashboards</text>
+  <text x="68" y="246" class="card-mono">• Unblinded DSMB Safety Review Boards</text>
+  <text x="68" y="264" class="card-mono">• CMC Batch Release &amp; Stability QA</text>
+  <text x="68" y="282" class="card-mono">• GenAI Clinical &amp; Regulatory Assistants</text>
 
-  <!-- Card 1B: STS Landing Bucket -->
-  <rect x="54" y="322" width="318" height="92" rx="10" fill="#ffffff" stroke="#a7f3d0" stroke-width="1.5" filter="url(#shadow)"/>
-  <image href="{icons['cloud_storage']}" x="66" y="340" width="40" height="40"/>
-  <text x="116" y="344" class="card-title">1. Cross-Cloud STS Landing Bucket</text>
-  <text x="116" y="361" class="card-mono">gs://*-rd-lakehouse-hns-sts-landing</text>
-  <text x="116" y="378" class="card-body">Event-driven Storage Transfer Service</text>
-  <text x="116" y="394" class="card-body">TLS 1.3 + SHA-256 manifest verification</text>
+  <!-- Card 1B: Internal Passthrough NLB -->
+  <rect x="410" y="164" width="346" height="142" rx="10" fill="#ffffff" stroke="#ddd6fe" stroke-width="1.5" filter="url(#shadow)"/>
+  <image href="{icons['cloud_load_balancing']}" x="422" y="178" width="38" height="38"/>
+  <text x="470" y="188" class="card-title">1B. Internal Passthrough NLB</text>
+  <text x="470" y="204" class="card-mono">VIP: denodo-vdp-internal:9999</text>
+  <text x="426" y="228" class="card-body">• TCP :9999 (JDBC)  |  TCP :9996 (ODBC)</text>
+  <text x="426" y="246" class="card-body">• TCP :9443 (Design Studio &amp; Data Catalog)</text>
+  <text x="426" y="264" class="card-body">• TCP Health Check (15s interval, port 9999)</text>
+  <text x="426" y="282" class="card-mono">• Zero-Trust IAP Admin: 35.235.240.0/20</text>
 
-  <!-- Card 1C: Primary Medallion HNS Lakehouse Bucket -->
-  <rect x="54" y="428" width="318" height="218" rx="10" fill="#ffffff" stroke="#059669" stroke-width="2" filter="url(#shadow)"/>
-  <image href="{icons['cloud_storage']}" x="66" y="444" width="42" height="42"/>
-  <text x="116" y="450" class="card-title">2. Primary Medallion HNS Bucket</text>
-  <text x="116" y="467" class="card-mono">gs://gke-demos-363017-rd-lakehouse-hns</text>
-  <text x="116" y="483" class="card-body">hierarchical_namespace {{ enabled = true }}</text>
-  <rect x="68" y="496" width="290" height="42" rx="6" fill="#f0fdf4" stroke="#86efac"/>
-  <text x="76" y="513" class="card-mono" style="font-size:10px;">Domain 1: bronze|silver|gold/clinical_ddf/</text>
-  <text x="76" y="529" class="card-body">Managed Folder ACL -&gt; sa-clinical-ddf</text>
-  <rect x="68" y="544" width="290" height="42" rx="6" fill="#f0fdf4" stroke="#86efac"/>
-  <text x="76" y="561" class="card-mono" style="font-size:10px;">Domain 2: bronze|silver|gold/real_world_data/</text>
-  <text x="76" y="577" class="card-body">Managed Folder ACL -&gt; sa-rwd-cohorts</text>
-  <rect x="68" y="592" width="290" height="42" rx="6" fill="#f0fdf4" stroke="#86efac"/>
-  <text x="76" y="609" class="card-mono" style="font-size:10px;">Domain 3: bronze|silver|gold/cmc_manufacturing/</text>
-  <text x="76" y="625" class="card-body">Managed Folder ACL -&gt; sa-cmc-mfg</text>
+  <!-- Card 1C: Denodo 8.0 VDP Regional Multi-Zone MIG -->
+  <rect x="774" y="164" width="376" height="142" rx="10" fill="#ffffff" stroke="#7c3aed" stroke-width="2" filter="url(#shadow)"/>
+  <image href="{icons['compute_engine']}" x="786" y="178" width="38" height="38"/>
+  <text x="834" y="188" class="card-title">1C. Denodo 8.0 VDP Cluster (Regional MIG)</text>
+  <text x="834" y="204" class="card-mono">2x n4-standard-8 (Zones a &amp; b, Shielded VM)</text>
+  <text x="790" y="226" class="card-body">• vTPM + Secure Boot + 200 GB Hyperdisk (CMEK)</text>
+  <rect x="790" y="238" width="344" height="56" rx="6" fill="#f5f3ff" stroke="#c4b5fd"/>
+  <text x="800" y="255" class="card-title">Federated Cross-Domain Views (VQL):</text>
+  <text x="800" y="271" class="card-mono">• dv_rd_molecule_360 (4-Way Join: DDF+RWD+CMC)</text>
+  <text x="800" y="286" class="card-mono">• dv_cmc_clinical_lot_trace (ERP/LIMS -&gt; Trial)</text>
 
-  <!-- Card 1D: Denodo Delta Cache Bucket & 30-Yr GxP WORM Archive Bucket -->
-  <rect x="54" y="660" width="318" height="102" rx="10" fill="#ffffff" stroke="#a7f3d0" stroke-width="1.5" filter="url(#shadow)"/>
-  <image href="{icons['cloud_storage']}" x="66" y="684" width="40" height="40"/>
-  <text x="116" y="682" class="card-title">3. Denodo Delta Cache HNS Bucket</text>
-  <text x="116" y="698" class="card-mono">gs://*-rd-lakehouse-hns-denodo-cache</text>
-  <text x="116" y="722" class="card-title">4. 30-Yr GxP WORM Archive Bucket</text>
-  <text x="116" y="738" class="card-mono">gs://*-gxp-worm-archive (946,728,000s)</text>
-  <text x="116" y="753" class="card-body">21 CFR Part 11 / EU Annex 11 retention</text>
+  <!-- Card 1D: Dynamic GxP Blinding & Cross-Border Policy Engine -->
+  <rect x="1192" y="164" width="356" height="142" rx="10" fill="#ffffff" stroke="#ddd6fe" stroke-width="1.5" filter="url(#shadow)"/>
+  <image href="{icons['cloud_armor']}" x="1204" y="178" width="36" height="36"/>
+  <text x="1250" y="188" class="card-title">1D. Runtime Governance &amp; Masking</text>
+  <text x="1250" y="204" class="card-body">Evaluated dynamically per user session</text>
+  <rect x="1204" y="216" width="332" height="38" rx="6" fill="#fef2f2" stroke="#fecaca"/>
+  <text x="1212" y="232" class="card-title" style="fill:#991b1b; font-size:11.8px;">Policy 1 (GxP Blinding): ROLE != DSMB_STATISTICIAN</text>
+  <text x="1212" y="247" class="card-mono" style="fill:#7f1d1d;">-&gt; Masks treatment arm as '***BLINDED-GXP***'</text>
+  <rect x="1204" y="260" width="332" height="38" rx="6" fill="#eff6ff" stroke="#bfdbfe"/>
+  <text x="1212" y="276" class="card-title" style="fill:#1e40af; font-size:11.8px;">Policy 2 (Cross-Border Filter): GLOBAL_EX_CN</text>
+  <text x="1212" y="291" class="card-mono" style="fill:#1e3a8a;">-&gt; Appends row filter WHERE region_code &lt;&gt; 'CN'</text>
 
-  <!-- Card 1E: Optional Filestore Enterprise POSIX Scratch -->
-  <rect x="54" y="774" width="318" height="90" rx="10" fill="#ffffff" stroke="#a7f3d0" stroke-width="1.5" filter="url(#shadow)"/>
-  <image href="{icons['filestore']}" x="66" y="796" width="40" height="40"/>
-  <text x="116" y="798" class="card-title">5. Filestore Enterprise (Optional)</text>
-  <text x="116" y="815" class="card-mono">NFSv4.1 /rd_posix_scratch (1 TB HA)</text>
-  <text x="116" y="832" class="card-body">Strict POSIX flock/fcntl byte-range locks</text>
-  <text x="116" y="848" class="card-body">for legacy SAS / C++ statistical binaries</text>
+  <!-- Layer 1 Horizontal Arrows -->
+  <path d="M 392 235 L 408 235" stroke="#7c3aed" stroke-width="2.5" marker-end="url(#arrow-purple)"/>
+  <path d="M 756 235 L 772 235" stroke="#7c3aed" stroke-width="2.5" marker-end="url(#arrow-purple)"/>
+  <path d="M 1150 220 L 1190 220" stroke="#7c3aed" stroke-width="2.5" marker-end="url(#arrow-purple)"/>
 
   <!-- ===================================================================== -->
-  <!-- SWIMLANE 2: DATABRICKS ON GCP LAKEHOUSE ENGINE (CENTER-LEFT)          -->
+  <!-- HORIZONTAL LAYER 2: BIGQUERY NATIVE DENODO CACHE LAYER ONLY           -->
   <!-- ===================================================================== -->
-  <rect x="412" y="128" width="420" height="752" rx="12" fill="#fff7ed" stroke="#f97316" stroke-width="2" filter="url(#shadow)"/>
-  <rect x="412" y="128" width="420" height="44" rx="12" fill="#ea580c"/>
-  <text x="428" y="148" class="badge" style="font-size:12.5px;">2. DATABRICKS ON GCP LAKEHOUSE ENGINE</text>
-  <text x="428" y="164" class="badge" style="font-weight:500;fill:#ffedd5;">snet-databricks-compute (10.168.0.0/19) + GKE Pods (/16)</text>
+  <rect x="36" y="342" width="1528" height="196" rx="12" fill="#eff6ff" stroke="#2563eb" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="36" y="342" width="1528" height="34" rx="10" fill="#1d4ed8"/>
+  <text x="54" y="364" class="badge" style="font-size:12px;">LAYER 2 — DENODO NATIVE CACHING LAYER ONLY: Google BigQuery + 50 GB BI Engine (modules/bigquery_biglake | Strictly Scoped to Denodo Cache)</text>
 
-  <!-- Card 2A: Databricks Workspace & Unity Catalog Governance -->
-  <rect x="428" y="186" width="388" height="140" rx="10" fill="#ffffff" stroke="#fed7aa" stroke-width="1.5" filter="url(#shadow)"/>
-  <image href="{icons['google_kubernetes_engine']}" x="442" y="204" width="40" height="40"/>
-  <image href="{icons['private_service_connect']}" x="442" y="262" width="40" height="40"/>
-  <text x="494" y="208" class="card-title">Databricks on GCP Workspace (GKE Enterprise)</text>
-  <text x="494" y="225" class="card-mono">Workspace ID: 8259555750233451 (PSC Enabled)</text>
-  <text x="494" y="242" class="card-body">Unity Catalog Storage Credential (sa-dbx-uc)</text>
-  <text x="494" y="259" class="card-body">9 External Locations mapped to HNS Subfolders</text>
-  <text x="494" y="278" class="card-title">Schemas &amp; 11 Delta Lake Medallion Tables</text>
-  <text x="494" y="295" class="card-mono" style="font-size:10px;">workspace.rd_lakehouse_medallion | cmc_manufacturing</text>
-  <text x="494" y="311" class="card-mono" style="font-size:10px;">workspace.clinical_development | real_world_evidence</text>
+  <!-- Card 2A: Architectural Separation Mandate -->
+  <rect x="52" y="388" width="340" height="136" rx="10" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5" filter="url(#shadow)"/>
+  <image href="{icons['bigquery']}" x="64" y="402" width="38" height="38"/>
+  <text x="112" y="410" class="card-title" style="fill:#1e3a8a;">2A. Architectural Separation Mandate</text>
+  <text x="112" y="427" class="card-body" style="fill:#1e3a8a;">BigQuery does NOT replace Databricks.</text>
+  <text x="66" y="450" class="card-body" style="fill:#1e3a8a;">• Provisioned strictly &amp; exclusively as the</text>
+  <text x="66" y="467" class="card-body" style="fill:#1e3a8a;">  Denodo 8.0 VDP Native Cache Engine</text>
+  <text x="66" y="484" class="card-body" style="fill:#1e3a8a;">  (replacing legacy Snowflake cache).</text>
+  <text x="66" y="504" class="card-mono" style="fill:#1e3a8a;">• IAM: sa-denodo-vdp dataEditor ONLY</text>
 
-  <!-- Card 2B: Next-Gen GCE Compute Pools -->
-  <rect x="428" y="340" width="388" height="206" rx="10" fill="#ffffff" stroke="#ea580c" stroke-width="2" filter="url(#shadow)"/>
-  <image href="{icons['compute_engine']}" x="442" y="356" width="40" height="40"/>
-  <text x="494" y="364" class="card-title">Next-Gen GCE Compute Pools (Photon + Delta)</text>
-  <text x="494" y="381" class="card-body">Replaces legacy Standard_D96ds_v5 nodes</text>
-  <rect x="442" y="396" width="360" height="32" rx="6" fill="#fff7ed" stroke="#fdba74"/>
-  <text x="452" y="416" class="card-mono">Pool 1 (Clinical DDF): n4-standard-16 (16 vCPU, 64 GB)</text>
-  <rect x="442" y="434" width="360" height="32" rx="6" fill="#fff7ed" stroke="#fdba74"/>
-  <text x="452" y="454" class="card-mono">Pool 2 (RWD Cohorts):  c4-highmem-32  (32 vCPU, 248 GB)</text>
-  <rect x="442" y="472" width="360" height="32" rx="6" fill="#fff7ed" stroke="#fdba74"/>
-  <text x="452" y="492" class="card-mono">Pool 3 (Genomics/PK):  m3-megamem-64  (64 vCPU, 976 GB)</text>
-  <rect x="442" y="510" width="360" height="28" rx="6" fill="#fff7ed" stroke="#fdba74"/>
-  <text x="452" y="528" class="card-mono">Pool 4 (NVMe Cache):   z3-highmem-88  (Titanium SSD)</text>
+  <!-- Card 2B: BigQuery Dataset denodo_vdp_cache + BI Engine -->
+  <rect x="410" y="388" width="386" height="136" rx="10" fill="#ffffff" stroke="#2563eb" stroke-width="2" filter="url(#shadow)"/>
+  <image href="{icons['bigquery']}" x="422" y="402" width="40" height="40"/>
+  <text x="472" y="410" class="card-title">2B. BigQuery Dataset: denodo_vdp_cache (EU)</text>
+  <text x="472" y="427" class="card-mono">+ 50 GB BI Engine In-Memory Acceleration</text>
+  <rect x="424" y="438" width="358" height="74" rx="6" fill="#f8fafc" stroke="#cbd5e1"/>
+  <text x="434" y="456" class="card-title">Clustered Denodo Materialized Cache Tables:</text>
+  <text x="434" y="474" class="card-mono" style="font-size:9.5px;">1. cache_dv_rd_molecule_360 (studyid, molecule_id)</text>
+  <text x="434" y="492" class="card-mono" style="font-size:9.5px;">2. cache_dv_cmc_clinical_lot_trace (studyid, lot_id)</text>
+  <text x="434" y="507" class="card-body">Encrypted at rest with Cloud KMS CMEK (90-day rotation)</text>
 
-  <!-- Card 2C: Serverless / Pro SQL Warehouse -->
-  <rect x="428" y="560" width="388" height="134" rx="10" fill="#ffffff" stroke="#ea580c" stroke-width="2" filter="url(#shadow)"/>
-  <image href="{icons['compute_engine']}" x="442" y="578" width="40" height="40"/>
-  <text x="494" y="584" class="card-title">Databricks Serverless / Pro SQL Warehouse</text>
-  <text x="494" y="601" class="card-mono" style="font-size:10px;">Warehouse ID: 0154a901254a4f17 (Photon Vectorized)</text>
-  <text x="494" y="618" class="card-body">Liquid Clustering: CLUSTER BY (studyid, molecule_id)</text>
-  <text x="494" y="635" class="card-body">Predictive I/O + Deletion Vectors enabled</text>
-  <rect x="442" y="646" width="360" height="36" rx="6" fill="#ffedd5" stroke="#fb923c"/>
-  <text x="452" y="663" class="card-mono">Simba Spark JDBC Endpoint (:443 over PSC)</text>
-  <text x="452" y="677" class="card-mono">/sql/1.0/warehouses/0154a901254a4f17</text>
+  <!-- Card 2C: Simba BigQuery JDBC + gRPC StorageReadAPI -->
+  <rect x="814" y="388" width="352" height="136" rx="10" fill="#ffffff" stroke="#93c5fd" stroke-width="1.5" filter="url(#shadow)"/>
+  <image href="{icons['private_service_connect']}" x="826" y="402" width="38" height="38"/>
+  <text x="874" y="410" class="card-title">2C. High-Throughput gRPC Read API</text>
+  <text x="874" y="427" class="card-mono">EnableHighThroughputAPI=1</text>
+  <text x="828" y="450" class="card-body">• Streams compressed Arrow/Avro blocks via</text>
+  <text x="828" y="467" class="card-mono">  bigquerystorage.googleapis.com (:443)</text>
+  <text x="828" y="485" class="card-body">• Granted roles/bigquery.readSessionUser</text>
+  <text x="828" y="503" class="card-body">• Zero public internet traversal (VIP 199.36.153.4/30)</text>
 
-  <!-- Card 2D: External Hive Metastore (HA Cloud SQL PostgreSQL 15) -->
-  <rect x="428" y="708" width="388" height="156" rx="10" fill="#ffffff" stroke="#fed7aa" stroke-width="1.5" filter="url(#shadow)"/>
-  <image href="{icons['cloud_sql']}" x="442" y="718" width="34" height="34"/>
-  <image href="{icons['secret_manager']}" x="442" y="756" width="34" height="34"/>
-  <text x="488" y="730" class="card-title">External Hive Metastore (Legacy 2.3.9 Parity)</text>
-  <text x="488" y="747" class="card-mono">Regional HA Cloud SQL PostgreSQL 15 (:5432)</text>
-  <text x="488" y="764" class="card-body">Private Service Access (/20 VPC Peering + SSL)</text>
-  <text x="488" y="781" class="card-body">Credentials injected via Cloud Secret Manager</text>
-  <rect x="442" y="796" width="360" height="54" rx="6" fill="#f8fafc" stroke="#cbd5e1"/>
-  <text x="452" y="814" class="card-mono" style="font-size:10px;">SQL URI Rewrite (sql/02_hive_metastore_uri_rewrite.sql):</text>
-  <text x="452" y="830" class="card-mono" style="font-size:10px;">UPDATE "SDS" SET "LOCATION" =</text>
-  <text x="452" y="844" class="card-mono" style="font-size:10px;">  REGEXP_REPLACE(LOCATION, '^abfss://...', 'gs://...')</text>
+  <!-- Card 2D: Live 3-Way Denodo Caching Benchmark -->
+  <rect x="1192" y="388" width="356" height="136" rx="10" fill="#ffffff" stroke="#10b981" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="1192" y="388" width="356" height="26" rx="6" fill="#059669"/>
+  <text x="1206" y="405" class="badge">2D. LIVE 3-WAY DENODO CACHING SPIKE BENCHMARK</text>
+  <text x="1206" y="434" class="card-mono" style="fill:#047857;">1. BIGQUERY_NATIVE_CACHE:  1,077.2 ms (6.31x Speedup)</text>
+  <text x="1206" y="456" class="card-mono" style="fill:#0369a1;">2. DELTA_GCS_CACHE (HNS):  1,584.1 ms (4.29x Speedup)</text>
+  <text x="1206" y="478" class="card-mono" style="fill:#b91c1c;">3. DIRECT_UNCACHED_JDBC:   6,801.3 ms (1.00x Baseline)</text>
+  <text x="1206" y="502" class="card-body">Verified on 4-table federated join (dv_rd_molecule_360)</text>
+
+  <!-- Vertical Connectors between Layer 1 (Denodo VDP) and Layer 2 (BigQuery Cache) -->
+  <path d="M 900 306 L 900 340" stroke="#1d4ed8" stroke-width="3" marker-end="url(#arrow-blue)" marker-start="url(#arrow-blue)"/>
+  <rect x="642" y="315" width="246" height="20" rx="4" fill="#1d4ed8"/>
+  <text x="650" y="329" class="badge">1. Cache Hit / Refresh (gRPC 1,077 ms)</text>
 
   <!-- ===================================================================== -->
-  <!-- SWIMLANE 3: DENODO 8.0 VDP SEMANTIC VIRTUALIZATION LAYER (CENTER-RT)  -->
+  <!-- HORIZONTAL LAYER 3: DATABRICKS ON GCP LAKEHOUSE ENGINE & METASTORE    -->
   <!-- ===================================================================== -->
-  <rect x="856" y="128" width="330" height="752" rx="12" fill="#f5f3ff" stroke="#8b5cf6" stroke-width="2" filter="url(#shadow)"/>
-  <rect x="856" y="128" width="330" height="44" rx="12" fill="#7c3aed"/>
-  <text x="872" y="148" class="badge" style="font-size:12.5px;">3. DENODO 8.0 VDP SEMANTIC LAYER</text>
-  <text x="872" y="164" class="badge" style="font-weight:500;fill:#ede9fe;">snet-denodo-vdp (10.169.0.0/22) Shielded MIG</text>
+  <rect x="36" y="560" width="1528" height="210" rx="12" fill="#fff7ed" stroke="#f97316" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="36" y="560" width="1528" height="34" rx="10" fill="#ea580c"/>
+  <text x="54" y="582" class="badge" style="font-size:12px;">LAYER 3 — PRIMARY LAKEHOUSE COMPUTE &amp; METASTORE TIER: Databricks on GCP + HA Cloud SQL Hive Metastore (snet-databricks 10.168.0.0/19)</text>
 
-  <!-- Card 3A: Internal Passthrough NLB -->
-  <rect x="872" y="186" width="298" height="114" rx="10" fill="#ffffff" stroke="#ddd6fe" stroke-width="1.5" filter="url(#shadow)"/>
-  <image href="{icons['cloud_load_balancing']}" x="884" y="206" width="42" height="42"/>
-  <text x="936" y="208" class="card-title">Internal Passthrough NLB</text>
-  <text x="936" y="225" class="card-mono">denodo-vdp-internal:9999</text>
-  <text x="936" y="242" class="card-body">:9999 (JDBC) | :9996 (ODBC)</text>
-  <text x="936" y="258" class="card-body">:9443 (Design Studio &amp; Data Catalog)</text>
-  <text x="936" y="274" class="card-body">TCP Health Check (15s interval)</text>
-  <text x="936" y="290" class="card-mono">IAP Tunnel: 35.235.240.0/20</text>
+  <!-- Clean Channel Connector from Layer 1 (Denodo VDP) down through x=1179 gap to Layer 3 -->
+  <path d="M 1150 275 L 1179 275 L 1179 558" fill="none" stroke="#ea580c" stroke-width="3" stroke-dasharray="6,3" marker-end="url(#arrow-orange)"/>
+  <rect x="880" y="535" width="290" height="20" rx="4" fill="#ea580c"/>
+  <text x="888" y="549" class="badge">2. Cache Miss / Pushdown (Simba Spark JDBC :443)</text>
 
-  <!-- Card 3B: Denodo 8.0 VDP Regional Multi-Zone MIG -->
-  <rect x="872" y="316" width="298" height="178" rx="10" fill="#ffffff" stroke="#7c3aed" stroke-width="2" filter="url(#shadow)"/>
-  <image href="{icons['compute_engine']}" x="884" y="334" width="42" height="42"/>
-  <text x="936" y="340" class="card-title">Denodo 8.0 VDP Cluster (MIG)</text>
-  <text x="936" y="357" class="card-mono">2x n4-standard-8 (Zone A &amp; B)</text>
-  <text x="936" y="374" class="card-body">Shielded VM (vTPM + Secure Boot)</text>
-  <text x="936" y="390" class="card-body">200 GB Hyperdisk Balanced (CMEK)</text>
-  <rect x="884" y="404" width="274" height="78" rx="6" fill="#f5f3ff" stroke="#c4b5fd"/>
-  <text x="894" y="422" class="card-title">Federated Derived Views (VQL)</text>
-  <text x="894" y="439" class="card-mono">1. dv_rd_molecule_360 (4-Way Join)</text>
-  <text x="894" y="455" class="card-mono">2. dv_cmc_clinical_lot_trace</text>
-  <text x="894" y="471" class="card-body">Cost-Based Optimizer + Pushdown</text>
+  <!-- Card 3A: Databricks Workspace & Unity Catalog -->
+  <rect x="52" y="606" width="356" height="150" rx="10" fill="#ffffff" stroke="#fed7aa" stroke-width="1.5" filter="url(#shadow)"/>
+  <image href="{icons['google_kubernetes_engine']}" x="64" y="620" width="38" height="38"/>
+  <text x="112" y="628" class="card-title">3A. Databricks on GCP &amp; Unity Catalog</text>
+  <text x="112" y="645" class="card-mono">Workspace ID: 8259555750233451 (PSC)</text>
+  <text x="66" y="668" class="card-body">• Unity Catalog Credential: sa-dbx-uc-mvp</text>
+  <text x="66" y="686" class="card-body">• 9 External Locations -&gt; HNS Managed Folders</text>
+  <text x="66" y="704" class="card-mono">• Schemas: rd_lakehouse_medallion | cmc</text>
+  <text x="66" y="722" class="card-mono">  clinical_development | real_world_evidence</text>
+  <text x="66" y="740" class="card-body">• 11 Liquid-Clustered Delta Lake Tables</text>
 
-  <!-- Card 3C: Dynamic GxP Blinding & Cross-Border Governance -->
-  <rect x="872" y="510" width="298" height="184" rx="10" fill="#ffffff" stroke="#ddd6fe" stroke-width="1.5" filter="url(#shadow)"/>
-  <image href="{icons['cloud_armor']}" x="884" y="528" width="40" height="40"/>
-  <text x="934" y="534" class="card-title">Dynamic Policy Enforcement</text>
-  <text x="934" y="551" class="card-body">Evaluated at query runtime in Denodo</text>
-  <rect x="884" y="564" width="274" height="54" rx="6" fill="#fef2f2" stroke="#fecaca"/>
-  <text x="894" y="581" class="card-title" style="fill:#991b1b;">Policy 1: GxP Study-Arm Blinding</text>
-  <text x="894" y="597" class="card-mono" style="fill:#7f1d1d;">ROLE != DSMB -&gt; '***BLINDED-GXP***'</text>
-  <text x="894" y="611" class="card-body" style="fill:#991b1b;">Masks active vs. placebo dosing arms</text>
-  <rect x="884" y="626" width="274" height="54" rx="6" fill="#eff6ff" stroke="#bfdbfe"/>
-  <text x="894" y="643" class="card-title" style="fill:#1e40af;">Policy 2: Cross-Border Row Filter</text>
-  <text x="894" y="659" class="card-mono" style="fill:#1e3a8a;">WHERE region_code &lt;&gt; 'CN'</text>
-  <text x="894" y="673" class="card-body" style="fill:#1e40af;">Enforces PIPL / GDPR residency boundaries</text>
+  <!-- Card 3B: Next-Gen GCE Compute Pools -->
+  <rect x="424" y="606" width="380" height="150" rx="10" fill="#ffffff" stroke="#ea580c" stroke-width="2" filter="url(#shadow)"/>
+  <image href="{icons['compute_engine']}" x="436" y="620" width="38" height="38"/>
+  <text x="484" y="628" class="card-title">3B. Next-Gen GCE Compute Pools</text>
+  <text x="484" y="645" class="card-body">Replaces legacy Standard_D96ds_v5 clusters</text>
+  <text x="438" y="668" class="card-mono">• Clinical DDF ETL:  n4-standard-16 (16 vCPU, 64 GB)</text>
+  <text x="438" y="686" class="card-mono">• RWD Cohort Joins:  c4-highmem-32  (32 vCPU, 248 GB)</text>
+  <text x="438" y="704" class="card-mono">• Genomics / PK-PD:  m3-megamem-64  (64 vCPU, 976 GB)</text>
+  <text x="438" y="722" class="card-mono">• Delta Cache Pool:  z3-highmem-88  (Titanium NVMe)</text>
+  <text x="438" y="740" class="card-mono">• CMC Batch Pool:    n4-highmem-8   (8 vCPU, 64 GB)</text>
 
-  <!-- Card 3D: Enterprise BI, AI & Regulatory Consumers -->
-  <rect x="872" y="710" width="298" height="154" rx="10" fill="#ffffff" stroke="#ddd6fe" stroke-width="1.5" filter="url(#shadow)"/>
-  <image href="{icons['virtual_private_cloud']}" x="884" y="728" width="40" height="40"/>
-  <text x="934" y="734" class="card-title">Downstream R&amp;D Consumers</text>
-  <text x="934" y="751" class="card-body">Zero SQL/application code changes</text>
-  <text x="888" y="776" class="card-mono">• Translational Medicine Dashboards</text>
-  <text x="888" y="794" class="card-mono">• Unblinded DSMB Safety Boards</text>
-  <text x="888" y="812" class="card-mono">• CMC Quality &amp; Batch Release</text>
-  <text x="888" y="830" class="card-mono">• AI / GenAI Clinical Assistants</text>
-  <text x="888" y="848" class="card-mono">• Regulatory Submission Portals</text>
+  <!-- Card 3C: Serverless / Pro SQL Warehouse -->
+  <rect x="820" y="606" width="356" height="150" rx="10" fill="#ffffff" stroke="#ea580c" stroke-width="2" filter="url(#shadow)"/>
+  <image href="{icons['private_service_connect']}" x="832" y="620" width="38" height="38"/>
+  <text x="880" y="628" class="card-title">3C. Serverless / Pro SQL Warehouse</text>
+  <text x="880" y="645" class="card-mono">Warehouse ID: 0154a901254a4f17</text>
+  <text x="834" y="668" class="card-body">• Photon Vectorized SQL Engine + Predictive I/O</text>
+  <text x="834" y="686" class="card-body">• Liquid Clustering: CLUSTER BY (studyid, molecule_id)</text>
+  <rect x="834" y="698" width="328" height="46" rx="6" fill="#ffedd5" stroke="#fb923c"/>
+  <text x="844" y="716" class="card-mono">Simba Spark JDBC Target (:443 over PSC):</text>
+  <text x="844" y="734" class="card-mono">/sql/1.0/warehouses/0154a901254a4f17</text>
 
-  <!-- ===================================================================== -->
-  <!-- SWIMLANE 4: BIGQUERY NATIVE DENODO CACHE LAYER ONLY (RIGHT)           -->
-  <!-- ===================================================================== -->
-  <rect x="1210" y="128" width="312" height="752" rx="12" fill="#eff6ff" stroke="#2563eb" stroke-width="2" filter="url(#shadow)"/>
-  <rect x="1210" y="128" width="312" height="44" rx="12" fill="#1d4ed8"/>
-  <text x="1226" y="148" class="badge" style="font-size:12.5px;">4. BIGQUERY DENODO CACHE ONLY</text>
-  <text x="1226" y="164" class="badge" style="font-weight:500;fill:#dbeafe;">Strictly Scoped to Denodo View Caching</text>
-
-  <!-- Card 4A: Architectural Separation Mandate -->
-  <rect x="1226" y="186" width="280" height="106" rx="10" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"/>
-  <text x="1238" y="208" class="card-title" style="fill:#1e3a8a;">Architectural Mandate</text>
-  <text x="1238" y="226" class="card-body" style="fill:#1e3a8a;">BigQuery does NOT replace Databricks.</text>
-  <text x="1238" y="242" class="card-body" style="fill:#1e3a8a;">It is used strictly &amp; exclusively as</text>
-  <text x="1238" y="258" class="card-body" style="fill:#1e3a8a;">the Denodo 8.0 VDP Native Cache</text>
-  <text x="1238" y="274" class="card-body" style="fill:#1e3a8a;">Engine (replacing legacy Snowflake).</text>
-
-  <!-- Card 4B: BigQuery Dataset denodo_vdp_cache + BI Engine -->
-  <rect x="1226" y="308" width="280" height="224" rx="10" fill="#ffffff" stroke="#2563eb" stroke-width="2" filter="url(#shadow)"/>
-  <image href="{icons['bigquery']}" x="1238" y="324" width="44" height="44"/>
-  <text x="1292" y="334" class="card-title">BigQuery Native Cache</text>
-  <text x="1292" y="351" class="card-mono">Dataset: denodo_vdp_cache</text>
-  <text x="1292" y="368" class="card-body">Region: EU (CMEK Encrypted)</text>
-  <rect x="1238" y="382" width="256" height="48" rx="6" fill="#eff6ff" stroke="#93c5fd"/>
-  <text x="1248" y="400" class="card-title">50 GB BI Engine Reservation</text>
-  <text x="1248" y="418" class="card-body">Sub-second vectorized memory cache</text>
-  <rect x="1238" y="438" width="256" height="82" rx="6" fill="#f8fafc" stroke="#cbd5e1"/>
-  <text x="1248" y="456" class="card-title">Clustered Cache Tables:</text>
-  <text x="1248" y="474" class="card-mono">• cache_dv_rd_molecule_360</text>
-  <text x="1248" y="490" class="card-body">  CLUSTER BY (studyid, molecule_id)</text>
-  <text x="1248" y="508" class="card-mono">• cache_dv_cmc_clinical_lot_trace</text>
-
-  <!-- Card 4C: High-Throughput gRPC StorageReadAPI -->
-  <rect x="1226" y="548" width="280" height="128" rx="10" fill="#ffffff" stroke="#93c5fd" stroke-width="1.5" filter="url(#shadow)"/>
-  <image href="{icons['private_service_connect']}" x="1238" y="566" width="40" height="40"/>
-  <text x="1288" y="572" class="card-title">Simba BigQuery JDBC + gRPC</text>
-  <text x="1288" y="589" class="card-mono">EnableHighThroughputAPI=1</text>
-  <text x="1238" y="614" class="card-body">Streams Arrow/Avro blocks via</text>
-  <text x="1238" y="630" class="card-mono">bigquerystorage.googleapis.com</text>
-  <text x="1238" y="646" class="card-body">using roles/bigquery.readSessionUser</text>
-  <text x="1238" y="662" class="card-body">over restricted.googleapis.com</text>
-
-  <!-- Card 4D: Live Caching Spike Benchmark Results -->
-  <rect x="1226" y="692" width="280" height="172" rx="10" fill="#ffffff" stroke="#10b981" stroke-width="2" filter="url(#shadow)"/>
-  <rect x="1226" y="692" width="280" height="30" rx="8" fill="#059669"/>
-  <text x="1240" y="711" class="badge">LIVE DENODO CACHING BENCHMARK</text>
-  <text x="1238" y="742" class="card-mono" style="fill:#059669;font-size:11.5px;">1. BIGQUERY_NATIVE_CACHE:</text>
-  <text x="1238" y="758" class="card-title" style="fill:#047857;">   1,077.2 ms  (6.31x Speedup)</text>
-  <text x="1238" y="784" class="card-mono" style="fill:#0284c7;font-size:11.5px;">2. DELTA_GCS_CACHE (Parquet):</text>
-  <text x="1238" y="800" class="card-title" style="fill:#0369a1;">   1,584.1 ms  (4.29x Speedup)</text>
-  <text x="1238" y="826" class="card-mono" style="fill:#dc2626;font-size:11.5px;">3. DIRECT_UNCACHED_FEDERATION:</text>
-  <text x="1238" y="842" class="card-title" style="fill:#b91c1c;">   6,801.3 ms  (1.00x Baseline)</text>
+  <!-- Card 3D: External Hive Metastore (HA Cloud SQL PostgreSQL 15) -->
+  <rect x="1192" y="606" width="356" height="150" rx="10" fill="#ffffff" stroke="#fed7aa" stroke-width="1.5" filter="url(#shadow)"/>
+  <image href="{icons['cloud_sql']}" x="1204" y="620" width="36" height="36"/>
+  <image href="{icons['secret_manager']}" x="1246" y="620" width="36" height="36"/>
+  <text x="1290" y="628" class="card-title">3D. External Hive Metastore</text>
+  <text x="1290" y="645" class="card-mono">HA Cloud SQL PG 15 (:5432)</text>
+  <text x="1206" y="668" class="card-body">• REGIONAL HA + Private Service Access (/20) + SSL</text>
+  <text x="1206" y="686" class="card-body">• Credentials injected via Cloud Secret Manager</text>
+  <rect x="1206" y="698" width="328" height="46" rx="6" fill="#f8fafc" stroke="#cbd5e1"/>
+  <text x="1216" y="716" class="card-mono">URI Rewrite: UPDATE "SDS" SET "LOCATION" =</text>
+  <text x="1216" y="734" class="card-mono">REGEXP_REPLACE(LOCATION, '^abfss://...', 'gs://...')</text>
 
   <!-- ===================================================================== -->
-  <!-- DIRECTIONAL DATA-FLOW ARROWS BETWEEN SWIMLANES                        -->
+  <!-- HORIZONTAL LAYER 4 (BOTTOM): STORAGE ACCOUNTS, GCS HNS & 30-YR WORM   -->
   <!-- ===================================================================== -->
-  <!-- Arrow 1: Primary HNS Bucket <-> Databricks Compute Pools -->
-  <path d="M 372 480 L 424 480" stroke="#059669" stroke-width="3" marker-end="url(#arrow-green)" marker-start="url(#arrow-green)"/>
-  <!-- Arrow 2: Primary HNS Bucket <-> Databricks SQL Warehouse -->
-  <path d="M 372 605 L 424 605" stroke="#059669" stroke-width="3" marker-end="url(#arrow-green)" marker-start="url(#arrow-green)"/>
-  <!-- Arrow 3: Denodo VDP MIG -> Databricks SQL Warehouse (Simba Spark JDBC :443) -->
-  <path d="M 872 435 L 844 435 L 844 625 L 820 625" fill="none" stroke="#ea580c" stroke-width="3" marker-end="url(#arrow-orange)"/>
-  <rect x="752" y="534" width="104" height="22" rx="4" fill="#ea580c"/>
-  <text x="760" y="549" class="badge">JDBC Pushdown</text>
+  <rect x="36" y="792" width="1528" height="214" rx="12" fill="#ecfdf5" stroke="#10b981" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="36" y="792" width="1528" height="34" rx="10" fill="#059669"/>
+  <text x="54" y="814" class="badge" style="font-size:12px;">LAYER 4 — STORAGE ACCOUNTS (ZERO-KEY SAs), KMS CMEK, GCS HNS MEDALLION FOLDERS &amp; 30-YR GxP WORM (modules/gcs_hns_lakehouse)</text>
 
-  <!-- Arrow 4: Denodo VDP MIG <-> BigQuery Native Cache (gRPC StorageReadAPI) -->
-  <path d="M 1170 405 L 1222 405" stroke="#1a73e8" stroke-width="3.5" marker-end="url(#arrow-blue)" marker-start="url(#arrow-blue)"/>
-  <rect x="1152" y="366" width="88" height="22" rx="4" fill="#1a73e8"/>
-  <text x="1160" y="381" class="badge">Cache R/W</text>
+  <!-- Vertical Connectors between Layer 3 (Databricks) and Layer 4 (GCS HNS Storage) -->
+  <path d="M 610 756 L 610 790" stroke="#059669" stroke-width="3" marker-end="url(#arrow-green)" marker-start="url(#arrow-green)"/>
+  <path d="M 998 756 L 998 790" stroke="#059669" stroke-width="3" marker-end="url(#arrow-green)" marker-start="url(#arrow-green)"/>
 
-  <!-- Arrow 5: Consumers -> Internal NLB -> Denodo VDP MIG -->
-  <path d="M 1020 710 L 1020 696" stroke="#7c3aed" stroke-width="2.5" marker-end="url(#arrow-purple)"/>
-  <path d="M 1020 300 L 1020 314" stroke="#7c3aed" stroke-width="2.5" marker-end="url(#arrow-purple)"/>
+  <!-- Card 4A: 7 Dedicated Service Accounts & KMS CMEK -->
+  <rect x="52" y="838" width="340" height="154" rx="10" fill="#ffffff" stroke="#a7f3d0" stroke-width="1.5" filter="url(#shadow)"/>
+  <image href="{icons['identity_and_access_management']}" x="64" y="850" width="36" height="36"/>
+  <image href="{icons['key_management_service']}" x="106" y="850" width="36" height="36"/>
+  <text x="150" y="860" class="card-title">4A. 7 Zero-Key Service Accounts</text>
+  <text x="150" y="876" class="card-body">&amp; Cloud KMS CMEK (90d Rotation)</text>
+  <text x="66" y="898" class="card-mono">• sa-sts-ingest     (STS Landing Creator)</text>
+  <text x="66" y="915" class="card-mono">• sa-uc-master      (Unity Catalog Master)</text>
+  <text x="66" y="932" class="card-mono">• sa-clinical-ddf   (Clinical Folder Admin)</text>
+  <text x="66" y="949" class="card-mono">• sa-rwd-cohorts    (RWD Folder Admin)</text>
+  <text x="66" y="966" class="card-mono">• sa-cmc-mfg        (CMC Folder Admin)</text>
+  <text x="66" y="983" class="card-mono">• sa-denodo-vdp-mvp (BQ &amp; GCS Cache Admin)</text>
+
+  <!-- Card 4B: Primary GCS HNS Medallion Lakehouse Bucket & 12 Managed Folders -->
+  <rect x="408" y="838" width="510" height="154" rx="10" fill="#ffffff" stroke="#059669" stroke-width="2" filter="url(#shadow)"/>
+  <image href="{icons['cloud_storage']}" x="420" y="850" width="38" height="38"/>
+  <text x="468" y="860" class="card-title">4B. Primary HNS Bucket: gs://*-rd-lakehouse-hns</text>
+  <text x="468" y="876" class="card-mono" style="font-size:9.8px;">hierarchical_namespace = true (Atomic O(1) Rename + High QPS)</text>
+  <rect x="420" y="888" width="156" height="92" rx="6" fill="#f0fdf4" stroke="#86efac"/>
+  <text x="428" y="906" class="card-title">1. Clinical DDF</text>
+  <text x="428" y="923" class="card-mono" style="font-size:9.2px;">bronze/clinical_ddf/</text>
+  <text x="428" y="939" class="card-mono" style="font-size:9.2px;">silver/clinical_ddf/</text>
+  <text x="428" y="955" class="card-mono" style="font-size:9.2px;">gold/clinical_ddf/</text>
+  <text x="428" y="971" class="card-body">ACL: sa-clinical-ddf</text>
+
+  <rect x="585" y="888" width="156" height="92" rx="6" fill="#f0fdf4" stroke="#86efac"/>
+  <text x="593" y="906" class="card-title">2. Real-World Data</text>
+  <text x="593" y="923" class="card-mono" style="font-size:9.2px;">bronze/real_world_data/</text>
+  <text x="593" y="939" class="card-mono" style="font-size:9.2px;">silver/real_world_data/</text>
+  <text x="593" y="955" class="card-mono" style="font-size:9.2px;">gold/real_world_data/</text>
+  <text x="593" y="971" class="card-body">ACL: sa-rwd-cohorts</text>
+
+  <rect x="750" y="888" width="156" height="92" rx="6" fill="#f0fdf4" stroke="#86efac"/>
+  <text x="758" y="906" class="card-title">3. CMC Biologics</text>
+  <text x="758" y="923" class="card-mono" style="font-size:8.8px;">bronze/cmc_manufacturing/</text>
+  <text x="758" y="939" class="card-mono" style="font-size:8.8px;">silver/cmc_manufacturing/</text>
+  <text x="758" y="955" class="card-mono" style="font-size:8.8px;">gold/cmc_manufacturing/</text>
+  <text x="758" y="971" class="card-body">ACL: sa-cmc-mfg</text>
+
+  <!-- Card 4C: Companion STS Landing & Denodo Delta Cache Buckets -->
+  <rect x="934" y="838" width="296" height="154" rx="10" fill="#ffffff" stroke="#a7f3d0" stroke-width="1.5" filter="url(#shadow)"/>
+  <image href="{icons['cloud_storage']}" x="946" y="850" width="36" height="36"/>
+  <text x="990" y="860" class="card-title">4C. STS &amp; Denodo Cache Buckets</text>
+  <text x="990" y="876" class="card-body">Dedicated isolation per workload</text>
+  <text x="946" y="900" class="card-mono">1. gs://*-sts-landing</text>
+  <text x="946" y="916" class="card-body">   Cross-Cloud STS ingest + SHA-256</text>
+  <text x="946" y="938" class="card-mono">2. gs://*-denodo-cache (HNS)</text>
+  <text x="946" y="954" class="card-body">   Denodo MPP Parquet/Delta cache</text>
+  <text x="946" y="974" class="card-mono">3. Filestore NFSv4.1 (Optional POSIX)</text>
+
+  <!-- Card 4D: 30-Year GxP WORM Regulatory Archive Bucket -->
+  <rect x="1246" y="838" width="302" height="154" rx="10" fill="#ffffff" stroke="#dc2626" stroke-width="2" filter="url(#shadow)"/>
+  <image href="{icons['cloud_storage']}" x="1258" y="850" width="36" height="36"/>
+  <text x="1302" y="860" class="card-title" style="fill:#991b1b;">4D. 30-Yr GxP WORM Archive</text>
+  <text x="1302" y="876" class="card-mono" style="fill:#7f1d1d;">gs://*-gxp-worm-archive</text>
+  <text x="1258" y="900" class="card-mono" style="fill:#7f1d1d;">• retention_period = 946728000s (30 Yrs)</text>
+  <text x="1258" y="918" class="card-body" style="fill:#7f1d1d;">• 21 CFR Part 11 &amp; EU Annex 11 compliant</text>
+  <text x="1258" y="936" class="card-body" style="fill:#7f1d1d;">• Object Versioning + ARCHIVE class</text>
+  <text x="1258" y="954" class="card-body" style="fill:#7f1d1d;">• Immutable clinical trial lock &amp; CMC</text>
+  <text x="1258" y="970" class="card-body" style="fill:#7f1d1d;">  batch release certificate storage</text>
 </svg>
 """
 
 
-def build_svg_2_network_and_vpc_sc(icons: dict[str, str]) -> str:
-    return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1560 860" width="100%" height="100%">
+def build_svg_2_network_and_vpc_sc_horizontal(icons: dict[str, str]) -> str:
+    return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 980" width="100%" height="100%">
   <defs>
     <style>
       .title {{ font: 700 22px 'Google Sans', 'Inter', 'Segoe UI', Arial, sans-serif; fill: #0f172a; }}
       .subtitle {{ font: 500 13px 'Google Sans', 'Inter', 'Segoe UI', Arial, sans-serif; fill: #475569; }}
       .card-title {{ font: 700 13px 'Google Sans', 'Inter', 'Segoe UI', Arial, sans-serif; fill: #0f172a; }}
       .card-body {{ font: 500 11px 'Google Sans', 'Inter', 'Segoe UI', Arial, sans-serif; fill: #334155; }}
-      .card-mono {{ font: 600 10.5px 'Roboto Mono', monospace; fill: #0f172a; }}
-      .badge {{ font: 700 10px 'Roboto Mono', monospace; fill: #ffffff; }}
+      .card-mono {{ font: 600 10.2px 'Roboto Mono', monospace; fill: #0f172a; }}
+      .badge {{ font: 700 10.5px 'Roboto Mono', monospace; fill: #ffffff; }}
     </style>
-    <filter id="shadow" x="-4%" y="-4%" width="108%" height="110%">
-      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#0f172a" flood-opacity="0.08"/>
+    <filter id="shadow" x="-2%" y="-4%" width="104%" height="110%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0f172a" flood-opacity="0.07"/>
     </filter>
     <marker id="arrow-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-      <path d="M 0 1 L 10 5 L 0 9 z" fill="#1a73e8"/>
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#1d4ed8"/>
+    </marker>
+    <marker id="arrow-green" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#059669"/>
     </marker>
     <marker id="arrow-red" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
       <path d="M 0 1 L 10 5 L 0 9 z" fill="#dc2626"/>
     </marker>
-    <marker id="arrow-green" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-      <path d="M 0 1 L 10 5 L 0 9 z" fill="#059669"/>
-    </marker>
   </defs>
 
-  <rect width="1560" height="860" rx="16" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
+  <rect width="1600" height="980" rx="16" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
 
   <!-- Header -->
-  <rect x="20" y="18" width="1520" height="68" rx="12" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5" filter="url(#shadow)"/>
-  <rect x="20" y="18" width="10" height="68" rx="4" fill="#dc2626"/>
-  <text x="48" y="48" class="title">Zero-Trust Network Controls, Multi-Subnet Segmentation &amp; VPC-SC Perimeter (modules/network_and_psc)</text>
-  <text x="48" y="70" class="subtitle">4 Segmented Subnets (/19 Databricks, /22 Denodo VDP, /24 PSC, /24 ILB Proxy)  |  Private Cloud DNS (199.36.153.4/30)  |  Micro-Segmented Firewalls</text>
+  <rect x="20" y="16" width="1560" height="64" rx="12" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="20" y="16" width="10" height="64" rx="4" fill="#dc2626"/>
+  <text x="46" y="44" class="title">Zero-Trust Network Controls, Multi-Subnet Segmentation &amp; VPC-SC Perimeter (Horizontal Layered View)</text>
+  <text x="46" y="65" class="subtitle">Layer 1: Zero-Trust Ingress &amp; Blocked Internet  |  Layer 2: 4 Segmented VPC Subnets  |  Layer 3: Micro-Segmented Firewall Matrix  |  Layer 4: Restricted Google APIs VIP</text>
 
-  <!-- VPC Box -->
-  <rect x="20" y="102" width="1020" height="736" rx="14" fill="#eff6ff" stroke="#2563eb" stroke-width="2" filter="url(#shadow)"/>
-  <rect x="20" y="102" width="1020" height="42" rx="12" fill="#1d4ed8"/>
-  <image href="{icons['virtual_private_cloud']}" x="34" y="107" width="32" height="32"/>
-  <text x="76" y="128" class="badge" style="font-size:13px;">CUSTOMER-MANAGED VPC: rd-lakehouse-vpc-mvp (REGIONAL ROUTING, AUTO_CREATE_SUBNETWORKS = FALSE)</text>
+  <!-- ===================================================================== -->
+  <!-- HORIZONTAL LAYER 1: INGRESS ACCESS & BLOCKED PUBLIC INTERNET BOUNDARY -->
+  <!-- ===================================================================== -->
+  <rect x="20" y="94" width="1560" height="156" rx="12" fill="#f1f5f9" stroke="#64748b" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="20" y="94" width="1560" height="32" rx="10" fill="#334155"/>
+  <text x="40" y="115" class="badge" style="font-size:12px;">LAYER 1 — ZERO-TRUST INGRESS ACCESS &amp; PUBLIC INTERNET EGRESS BOUNDARY</text>
 
-  <!-- Subnet A: Databricks Compute Plane (/19) -->
-  <rect x="42" y="162" width="470" height="260" rx="10" fill="#ffffff" stroke="#f97316" stroke-width="2" filter="url(#shadow)"/>
-  <rect x="42" y="162" width="470" height="32" rx="8" fill="#ea580c"/>
-  <text x="56" y="183" class="badge">SUBNET A: snet-databricks-europe-west2 (10.168.0.0/19)</text>
-  <image href="{icons['google_kubernetes_engine']}" x="58" y="208" width="42" height="42"/>
-  <text x="112" y="220" class="card-title">Databricks Compute Plane (8,192 Node IPs)</text>
-  <text x="112" y="237" class="card-mono">Primary CIDR:   10.168.0.0/19 (Private Google Access)</text>
-  <text x="112" y="254" class="card-mono">GKE Pods Range: 10.176.0.0/16 (65,536 Pod IPs)</text>
-  <text x="112" y="271" class="card-mono">GKE Svc Range:  10.177.0.0/20 (4,096 ClusterIPs)</text>
-  <rect x="58" y="286" width="438" height="120" rx="6" fill="#fff7ed" stroke="#fdba74"/>
-  <text x="70" y="306" class="card-title">Network Tag: [databricks-worker] &amp; VPC Flow Logs (5s)</text>
-  <text x="70" y="324" class="card-mono">• Hosts N4, C4, M3, and Z3 Databricks Worker Pools</text>
-  <text x="70" y="342" class="card-mono">• Outbound TCP :5432 -&gt; HA Cloud SQL Hive Metastore</text>
-  <text x="70" y="360" class="card-mono">• Outbound TCP :443  -&gt; restricted.googleapis.com (GCS HNS)</text>
-  <text x="70" y="378" class="card-mono">• Inbound TCP :443/:8443 from snet-denodo-vdp &amp; PSC only</text>
+  <rect x="38" y="136" width="480" height="102" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+  <image href="{icons['identity_and_access_management']}" x="52" y="152" width="38" height="38"/>
+  <text x="102" y="160" class="card-title">1A. Identity-Aware Proxy (IAP) Zero-Trust Tunnel</text>
+  <text x="102" y="178" class="card-mono">Source CIDR: 35.235.240.0/20 (TCP :22, :9090, :9443, :9999)</text>
+  <text x="102" y="196" class="card-body">• Authenticates administrators &amp; data stewards via Google Identity</text>
+  <text x="102" y="214" class="card-body">• Zero bastion public IPs required anywhere in the VPC</text>
 
-  <!-- Subnet B: Denodo 8.0 VDP Cluster (/22) -->
-  <rect x="536" y="162" width="482" height="260" rx="10" fill="#ffffff" stroke="#7c3aed" stroke-width="2" filter="url(#shadow)"/>
-  <rect x="536" y="162" width="482" height="32" rx="8" fill="#7c3aed"/>
-  <text x="550" y="183" class="badge">SUBNET B: snet-denodo-vdp-europe-west2 (10.169.0.0/22)</text>
-  <image href="{icons['compute_engine']}" x="552" y="208" width="42" height="42"/>
-  <image href="{icons['cloud_load_balancing']}" x="552" y="260" width="42" height="42"/>
-  <text x="606" y="220" class="card-title">Denodo 8.0 VDP Virtualization Tier (1,024 IPs)</text>
-  <text x="606" y="237" class="card-mono">Primary CIDR: 10.169.0.0/22 (Private Google Access)</text>
-  <text x="606" y="254" class="card-body">Shielded VM Regional MIG (n4-standard-8, Zones a/b)</text>
-  <text x="606" y="274" class="card-title">Internal Passthrough NLB VIP (:9999/:9996/:9443)</text>
-  <rect x="552" y="294" width="450" height="112" rx="6" fill="#f5f3ff" stroke="#c4b5fd"/>
-  <text x="564" y="314" class="card-title">Network Tag: [denodo-vdp-node] &amp; Zero Public IPs</text>
-  <text x="564" y="332" class="card-mono">• Inbound :9999/:9996/:9443 from IAP (35.235.240.0/20) &amp; VPC</text>
-  <text x="564" y="350" class="card-mono">• Outbound :443 -&gt; Databricks SQL Warehouse PSC Endpoint</text>
-  <text x="564" y="368" class="card-mono">• Outbound :443 -&gt; BigQuery StorageReadAPI (199.36.153.4/30)</text>
-  <text x="564" y="386" class="card-mono">• Health Checks from 130.211.0.0/22 &amp; 35.191.0.0/16</text>
+  <rect x="536" y="136" width="480" height="102" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+  <image href="{icons['cloud_load_balancing']}" x="550" y="152" width="38" height="38"/>
+  <text x="600" y="160" class="card-title">1B. GCP Health Probers &amp; Controlled Cloud NAT</text>
+  <text x="600" y="178" class="card-mono">Health Check CIDRs: 130.211.0.0/22 &amp; 35.191.0.0/16</text>
+  <text x="600" y="196" class="card-body">• Probes Denodo VDP Internal Passthrough NLB on TCP :9999</text>
+  <text x="600" y="214" class="card-body">• Cloud NAT (ERRORS_ONLY logging) for allowlisted OS patching</text>
 
-  <!-- Subnet C: Private Service Connect (/24) -->
-  <rect x="42" y="442" width="470" height="176" rx="10" fill="#ffffff" stroke="#0284c7" stroke-width="2" filter="url(#shadow)"/>
-  <rect x="42" y="442" width="470" height="32" rx="8" fill="#0284c7"/>
-  <text x="56" y="463" class="badge">SUBNET C: snet-psc-europe-west2 (10.169.4.0/24)</text>
-  <image href="{icons['private_service_connect']}" x="58" y="488" width="42" height="42"/>
-  <text x="112" y="500" class="card-title">Private Service Connect (PSC) Endpoint Subnet</text>
-  <text x="112" y="518" class="card-mono">Internal IP: rd-lakehouse-psc-databricks-ip</text>
-  <text x="112" y="536" class="card-body">Terminates Databricks Control Plane Web UI, REST API,</text>
-  <text x="112" y="552" class="card-body">Secure Cluster Connectivity (SCC) relay, and Serverless</text>
-  <text x="112" y="568" class="card-body">SQL Warehouse JDBC traffic strictly inside the VPC.</text>
-  <text x="112" y="588" class="card-mono">SUBNET D: snet-ilb-proxy (10.169.5.0/24) REGIONAL_PROXY</text>
+  <rect x="1034" y="136" width="528" height="102" rx="10" fill="#fef2f2" stroke="#dc2626" stroke-width="2"/>
+  <image href="{icons['cloud_armor']}" x="1048" y="152" width="38" height="38"/>
+  <text x="1098" y="160" class="card-title" style="fill:#991b1b;">1C. Public Internet (0.0.0.0/0) — EGRESS BLOCKED</text>
+  <text x="1098" y="178" class="card-mono" style="fill:#7f1d1d;">Firewall Priority 65534: DENY ALL + INCLUDE_ALL_METADATA</text>
+  <text x="1098" y="196" class="card-body" style="fill:#7f1d1d;">• Zero public IPs on Databricks workers or Denodo VDP VMs</text>
+  <text x="1098" y="214" class="card-body" style="fill:#7f1d1d;">• VPC-SC blocks unauthorized cross-project copies/exports</text>
 
-  <!-- Subnet E / PSA Peering: Cloud SQL & Filestore + Cloud DNS -->
-  <rect x="536" y="442" width="482" height="176" rx="10" fill="#ffffff" stroke="#059669" stroke-width="2" filter="url(#shadow)"/>
-  <rect x="536" y="442" width="482" height="32" rx="8" fill="#059669"/>
-  <text x="550" y="463" class="badge">PRIVATE SERVICE ACCESS (/20) &amp; PRIVATE CLOUD DNS</text>
-  <image href="{icons['cloud_sql']}" x="552" y="486" width="40" height="40"/>
-  <image href="{icons['cloud_dns']}" x="552" y="542" width="40" height="40"/>
-  <text x="606" y="498" class="card-title">PSA Peering: HA Cloud SQL Hive Metastore (:5432)</text>
-  <text x="606" y="515" class="card-mono">db-custom-4-16384 (REGIONAL HA + SSL Required)</text>
-  <text x="606" y="532" class="card-body">+ Optional Filestore Enterprise NFSv4.1 (:2049)</text>
-  <text x="606" y="556" class="card-title">Private Cloud DNS Zone (googleapis.com.)</text>
-  <text x="606" y="573" class="card-mono">*.googleapis.com CNAME -&gt; restricted.googleapis.com</text>
-  <text x="606" y="590" class="card-mono">A Records: 199.36.153.4, .5, .6, .7 (VIP Range /30)</text>
+  <!-- ===================================================================== -->
+  <!-- HORIZONTAL LAYER 2: CUSTOMER-MANAGED VPC & 4 SEGMENTED SUBNETS        -->
+  <!-- ===================================================================== -->
+  <rect x="20" y="270" width="1560" height="248" rx="12" fill="#eff6ff" stroke="#2563eb" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="20" y="270" width="1560" height="34" rx="10" fill="#1d4ed8"/>
+  <text x="40" y="292" class="badge" style="font-size:12px;">LAYER 2 — CUSTOMER-MANAGED VPC: rd-lakehouse-vpc-mvp (4 Dedicated Subnets + Private Service Access + Private Cloud DNS)</text>
 
-  <!-- Firewall Policy Table inside VPC -->
-  <rect x="42" y="636" width="976" height="184" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow)"/>
-  <rect x="42" y="636" width="976" height="30" rx="8" fill="#1e293b"/>
-  <text x="58" y="656" class="badge">ZERO-TRUST GCP FIREWALL POLICY MATRIX (PRIORITY-ORDERED INGRESS &amp; EGRESS CONTROLS)</text>
-  <text x="58" y="686" class="card-mono" style="fill:#047857;">[Prio 100 | EGRESS | ALLOW] -&gt; 199.36.153.4/30 (TCP :443)  | Allows GCS HNS, BigQuery StorageReadAPI, Cloud KMS, Secret Manager</text>
-  <text x="58" y="708" class="card-mono" style="fill:#0284c7;">[Prio 150 | INGRESS| ALLOW] 10.169.0.0/22 -&gt; [databricks-worker] (:443, :8443) | Allows Denodo VDP Simba Spark JDBC pushdown</text>
-  <text x="58" y="730" class="card-mono" style="fill:#0284c7;">[Prio 200 | INGRESS| ALLOW] 10.168.0.0/19, 10.176.0.0/16 -&gt; [databricks-worker] (:443, :2049, :5432, :8443) | Spark Shuffle &amp; HMS</text>
-  <text x="58" y="752" class="card-mono" style="fill:#7c3aed;">[Prio 250 | INGRESS| ALLOW] 35.235.240.0/20 (IAP) &amp; GCP HC -&gt; [denodo-vdp-node] (:22, :9090, :9443, :9996, :9999) | Zero-Trust Admin</text>
-  <text x="58" y="776" class="card-mono" style="fill:#dc2626;">[Prio 65534| EGRESS | DENY ] -&gt; 0.0.0.0/0 (ALL PROTOCOLS) + INCLUDE_ALL_METADATA Logging | Blocks all unauthorized internet egress</text>
-  <text x="58" y="800" class="card-body">Cloud NAT (rd-lakehouse-cloud-nat) is attached with ERRORS_ONLY logging strictly for allowlisted OS/driver package repositories.</text>
+  <!-- Subnet A: Databricks Compute -->
+  <rect x="38" y="316" width="372" height="188" rx="10" fill="#ffffff" stroke="#ea580c" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="38" y="316" width="372" height="28" rx="8" fill="#ea580c"/>
+  <text x="50" y="335" class="badge">SUBNET A: snet-databricks (10.168.0.0/19)</text>
+  <image href="{icons['google_kubernetes_engine']}" x="50" y="356" width="36" height="36"/>
+  <text x="96" y="368" class="card-title">Databricks Compute Plane (8,192 IPs)</text>
+  <text x="96" y="384" class="card-mono">GKE Pods: 10.176.0.0/16 (65,536 IPs)</text>
+  <text x="96" y="400" class="card-mono">GKE Svc:  10.177.0.0/20 (4,096 IPs)</text>
+  <text x="50" y="424" class="card-mono">• Tag: [databricks-worker] | Flow Logs: 5s</text>
+  <text x="50" y="442" class="card-body">• Hosts N4, C4, M3, Z3 GCE worker pools</text>
+  <text x="50" y="460" class="card-body">• Outbound :5432 -&gt; Cloud SQL Hive Metastore</text>
+  <text x="50" y="478" class="card-body">• Outbound :443  -&gt; restricted.googleapis.com</text>
 
-  <!-- Right Column: VPC-SC Protected Google APIs & Blocked Public Internet -->
-  <rect x="1064" y="102" width="476" height="486" rx="14" fill="#ecfdf5" stroke="#059669" stroke-width="2" filter="url(#shadow)"/>
-  <rect x="1064" y="102" width="476" height="42" rx="12" fill="#059669"/>
-  <text x="1082" y="128" class="badge" style="font-size:13px;">RESTRICTED GOOGLE APIs VIP (199.36.153.4/30)</text>
+  <!-- Subnet B: Denodo VDP -->
+  <rect x="424" y="316" width="372" height="188" rx="10" fill="#ffffff" stroke="#7c3aed" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="424" y="316" width="372" height="28" rx="8" fill="#7c3aed"/>
+  <text x="436" y="335" class="badge">SUBNET B: snet-denodo-vdp (10.169.0.0/22)</text>
+  <image href="{icons['compute_engine']}" x="436" y="356" width="36" height="36"/>
+  <text x="482" y="368" class="card-title">Denodo 8.0 VDP Cluster (1,024 IPs)</text>
+  <text x="482" y="384" class="card-mono">Shielded VM MIG (n4-standard-8, a/b)</text>
+  <text x="482" y="400" class="card-mono">Internal NLB VIP (:9999/:9996/:9443)</text>
+  <text x="436" y="424" class="card-mono">• Tag: [denodo-vdp-node] | Zero Public IPs</text>
+  <text x="436" y="442" class="card-body">• Outbound :443 -&gt; Databricks PSC Endpoint</text>
+  <text x="436" y="460" class="card-body">• Outbound :443 -&gt; BigQuery StorageReadAPI</text>
+  <text x="436" y="478" class="card-body">• Inbound :9999/:9443 from IAP &amp; internal BI</text>
 
-  <rect x="1084" y="162" width="436" height="92" rx="10" fill="#ffffff" stroke="#a7f3d0" stroke-width="1.5"/>
-  <image href="{icons['cloud_storage']}" x="1098" y="186" width="42" height="42"/>
-  <text x="1154" y="188" class="card-title">storage.googleapis.com (VPC-SC Protected)</text>
-  <text x="1154" y="206" class="card-body">• STS Landing, Primary HNS Lakehouse, Denodo Cache</text>
-  <text x="1154" y="224" class="card-body">• 30-Yr GxP WORM Archive Bucket</text>
-  <text x="1154" y="240" class="card-mono">Zero public internet exposure; perimeter locked</text>
+  <!-- Subnet C & D: PSC & ILB Proxy -->
+  <rect x="810" y="316" width="372" height="188" rx="10" fill="#ffffff" stroke="#0284c7" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="810" y="316" width="372" height="28" rx="8" fill="#0284c7"/>
+  <text x="822" y="335" class="badge">SUBNET C &amp; D: PSC (/24) &amp; ILB PROXY (/24)</text>
+  <image href="{icons['private_service_connect']}" x="822" y="356" width="36" height="36"/>
+  <text x="868" y="368" class="card-title">Private Service Connect &amp; Envoy</text>
+  <text x="868" y="384" class="card-mono">Subnet C: snet-psc (10.169.4.0/24)</text>
+  <text x="868" y="400" class="card-mono">Subnet D: snet-ilb-proxy (10.169.5.0/24)</text>
+  <text x="822" y="424" class="card-mono">• IP: rd-lakehouse-psc-databricks-ip</text>
+  <text x="822" y="442" class="card-body">• Terminates Databricks Control Plane Web UI,</text>
+  <text x="822" y="460" class="card-body">  SCC relay &amp; SQL Warehouse Private Link</text>
+  <text x="822" y="478" class="card-body">• REGIONAL_MANAGED_PROXY for L7 HTTPS ILB</text>
 
-  <rect x="1084" y="268" width="436" height="92" rx="10" fill="#ffffff" stroke="#a7f3d0" stroke-width="1.5"/>
-  <image href="{icons['bigquery']}" x="1098" y="292" width="42" height="42"/>
-  <text x="1154" y="294" class="card-title">bigquery.googleapis.com &amp; bigquerystorage</text>
-  <text x="1154" y="312" class="card-body">• Denodo VDP Native Cache (denodo_vdp_cache ONLY)</text>
-  <text x="1154" y="330" class="card-body">• 50 GB BI Engine + High-Throughput gRPC Read API</text>
-  <text x="1154" y="346" class="card-mono">Accessible solely by sa-denodo-vdp inside perimeter</text>
+  <!-- PSA Peering & Private Cloud DNS -->
+  <rect x="1196" y="316" width="366" height="188" rx="10" fill="#ffffff" stroke="#059669" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="1196" y="316" width="366" height="28" rx="8" fill="#059669"/>
+  <text x="1208" y="335" class="badge">PSA PEERING (/20) &amp; PRIVATE CLOUD DNS</text>
+  <image href="{icons['cloud_dns']}" x="1208" y="356" width="36" height="36"/>
+  <image href="{icons['cloud_sql']}" x="1250" y="356" width="36" height="36"/>
+  <text x="1296" y="368" class="card-title">Cloud DNS &amp; PSA Peering</text>
+  <text x="1296" y="384" class="card-mono">Zone: googleapis.com. (Private)</text>
+  <text x="1208" y="408" class="card-mono">• *.googleapis.com -&gt; restricted.googleapis.com</text>
+  <text x="1208" y="426" class="card-mono">• A Records: 199.36.153.4, .5, .6, .7 (/30)</text>
+  <text x="1208" y="446" class="card-body">• PSA /20 Peering: HA Cloud SQL PG 15 (:5432)</text>
+  <text x="1208" y="464" class="card-body">• Optional Filestore Enterprise NFSv4.1 (:2049)</text>
 
-  <rect x="1084" y="374" width="436" height="92" rx="10" fill="#ffffff" stroke="#a7f3d0" stroke-width="1.5"/>
-  <image href="{icons['key_management_service']}" x="1098" y="398" width="42" height="42"/>
-  <text x="1154" y="400" class="card-title">cloudkms &amp; secretmanager.googleapis.com</text>
-  <text x="1154" y="418" class="card-body">• 90-Day rotating CMEK key ring (europe-west2)</text>
-  <text x="1154" y="436" class="card-body">• External Hive Metastore credentials &amp; JDBC tokens</text>
-  <text x="1154" y="452" class="card-mono">Hardware-backed KMS protection across all tiers</text>
+  <!-- ===================================================================== -->
+  <!-- HORIZONTAL LAYER 3: MICRO-SEGMENTED ZERO-TRUST FIREWALL MATRIX        -->
+  <!-- ===================================================================== -->
+  <rect x="20" y="538" width="1560" height="196" rx="12" fill="#ffffff" stroke="#1e293b" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="20" y="538" width="1560" height="34" rx="10" fill="#1e293b"/>
+  <text x="40" y="560" class="badge" style="font-size:12px;">LAYER 3 — ZERO-TRUST GCP FIREWALL POLICY LAYER (5 PRIORITY-ORDERED INGRESS &amp; EGRESS RULES)</text>
 
-  <rect x="1084" y="480" width="436" height="90" rx="10" fill="#ffffff" stroke="#a7f3d0" stroke-width="1.5"/>
-  <image href="{icons['identity_and_access_management']}" x="1098" y="502" width="42" height="42"/>
-  <text x="1154" y="506" class="card-title">container &amp; sqladmin.googleapis.com</text>
-  <text x="1154" y="524" class="card-body">• Databricks GKE Enterprise node pool management</text>
-  <text x="1154" y="542" class="card-body">• Regional HA Cloud SQL PostgreSQL 15 control plane</text>
+  <rect x="38" y="584" width="292" height="136" rx="8" fill="#f0fdf4" stroke="#10b981" stroke-width="1.5"/>
+  <text x="50" y="604" class="card-title" style="fill:#047857;">Rule 1: Priority 100 (EGRESS)</text>
+  <text x="50" y="622" class="card-mono" style="fill:#065f46;">ALLOW tcp:443</text>
+  <text x="50" y="640" class="card-mono">Dest: 199.36.153.4/30</text>
+  <text x="50" y="662" class="card-body">Allows private egress to</text>
+  <text x="50" y="678" class="card-body">restricted.googleapis.com</text>
+  <text x="50" y="694" class="card-body">(GCS, BQ, KMS, Secret Mgr)</text>
 
-  <!-- Blocked Public Internet Box -->
-  <rect x="1064" y="608" width="476" height="230" rx="14" fill="#fef2f2" stroke="#dc2626" stroke-width="2" filter="url(#shadow)"/>
-  <rect x="1064" y="608" width="476" height="42" rx="12" fill="#dc2626"/>
-  <image href="{icons['cloud_armor']}" x="1078" y="613" width="32" height="32"/>
-  <text x="1118" y="634" class="badge" style="font-size:13px;">PUBLIC INTERNET (0.0.0.0/0) — EGRESS BLOCKED</text>
-  <text x="1086" y="676" class="card-title" style="fill:#991b1b;">4-Layer Exfiltration Defense:</text>
-  <text x="1086" y="700" class="card-body" style="fill:#7f1d1d;">1. Zero Public IPs on Databricks workers &amp; Denodo VMs</text>
-  <text x="1086" y="722" class="card-body" style="fill:#7f1d1d;">2. Firewall Rule Priority 65534 denies all 0.0.0.0/0 egress</text>
-  <text x="1086" y="744" class="card-body" style="fill:#7f1d1d;">3. Private DNS forces *.googleapis.com -&gt; 199.36.153.4/30</text>
-  <text x="1086" y="766" class="card-body" style="fill:#7f1d1d;">4. VPC-SC Perimeter blocks unauthorized project copies</text>
-  <text x="1086" y="794" class="card-mono" style="fill:#991b1b;">Audit Trail: INCLUDE_ALL_METADATA -&gt; Cloud Logging</text>
+  <rect x="344" y="584" width="292" height="136" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="356" y="604" class="card-title" style="fill:#1d4ed8;">Rule 2: Priority 150 (INGRESS)</text>
+  <text x="356" y="622" class="card-mono" style="fill:#1e40af;">ALLOW tcp:443, 8443</text>
+  <text x="356" y="640" class="card-mono">Src: 10.169.0.0/22 (Denodo)</text>
+  <text x="356" y="662" class="card-body">Target: [databricks-worker]</text>
+  <text x="356" y="678" class="card-body">Permits Denodo 8.0 VDP Simba</text>
+  <text x="356" y="694" class="card-body">Spark JDBC query pushdown</text>
 
-  <!-- Arrows -->
-  <path d="M 1018 525 L 1062 320" stroke="#059669" stroke-width="3.5" marker-end="url(#arrow-green)"/>
-  <path d="M 1018 770 L 1062 720" stroke="#dc2626" stroke-width="3" stroke-dasharray="6,4" marker-end="url(#arrow-red)"/>
+  <rect x="650" y="584" width="296" height="136" rx="8" fill="#fff7ed" stroke="#f97316" stroke-width="1.5"/>
+  <text x="662" y="604" class="card-title" style="fill:#c2410c;">Rule 3: Priority 200 (INGRESS)</text>
+  <text x="662" y="622" class="card-mono" style="fill:#9a3412;">ALLOW tcp:443,2049,5432,8443</text>
+  <text x="662" y="640" class="card-mono">Src: 10.168.0.0/19, 10.176/16</text>
+  <text x="662" y="662" class="card-body">Target: [databricks-worker]</text>
+  <text x="662" y="678" class="card-body">Intra-cluster Spark shuffle,</text>
+  <text x="662" y="694" class="card-body">Cloud SQL HMS &amp; Filestore</text>
+
+  <rect x="960" y="584" width="296" height="136" rx="8" fill="#f5f3ff" stroke="#8b5cf6" stroke-width="1.5"/>
+  <text x="972" y="604" class="card-title" style="fill:#6d28d9;">Rule 4: Priority 250 (INGRESS)</text>
+  <text x="972" y="622" class="card-mono" style="fill:#5b21b6;">ALLOW tcp:22,9090,9443,9996,9999</text>
+  <text x="972" y="640" class="card-mono">Src: 35.235.240.0/20 (IAP) &amp; HC</text>
+  <text x="972" y="662" class="card-body">Target: [denodo-vdp-node]</text>
+  <text x="972" y="678" class="card-body">Zero-Trust IAP admin, NLB</text>
+  <text x="972" y="694" class="card-body">health checks &amp; JDBC/ODBC</text>
+
+  <rect x="1270" y="584" width="292" height="136" rx="8" fill="#fef2f2" stroke="#dc2626" stroke-width="2"/>
+  <text x="1282" y="604" class="card-title" style="fill:#b91c1c;">Rule 5: Priority 65534 (EGRESS)</text>
+  <text x="1282" y="622" class="card-mono" style="fill:#991b1b;">DENY ALL PROTOCOLS</text>
+  <text x="1282" y="640" class="card-mono">Dest: 0.0.0.0/0 (Internet)</text>
+  <text x="1282" y="662" class="card-body" style="fill:#7f1d1d;">Blocks all unauthorized internet</text>
+  <text x="1282" y="678" class="card-body" style="fill:#7f1d1d;">egress with full packet metadata</text>
+  <text x="1282" y="694" class="card-mono" style="fill:#991b1b;">Log: INCLUDE_ALL_METADATA</text>
+
+  <!-- ===================================================================== -->
+  <!-- HORIZONTAL LAYER 4 (BOTTOM): RESTRICTED GOOGLE APIs VIP & VPC-SC      -->
+  <!-- ===================================================================== -->
+  <rect x="20" y="754" width="1560" height="206" rx="12" fill="#ecfdf5" stroke="#059669" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="20" y="754" width="1560" height="34" rx="10" fill="#059669"/>
+  <text x="40" y="776" class="badge" style="font-size:12px;">LAYER 4 — RESTRICTED GOOGLE APIs VIP (199.36.153.4/30) &amp; VPC SERVICE CONTROLS (VPC-SC) PROTECTED SERVICES</text>
+
+  <rect x="38" y="800" width="372" height="144" rx="10" fill="#ffffff" stroke="#a7f3d0" stroke-width="1.5"/>
+  <image href="{icons['cloud_storage']}" x="52" y="814" width="40" height="40"/>
+  <text x="104" y="824" class="card-title">storage.googleapis.com</text>
+  <text x="104" y="841" class="card-mono">VPC-SC Perimeter Locked</text>
+  <text x="52" y="866" class="card-body">• STS Landing Bucket (gs://*-sts-landing)</text>
+  <text x="52" y="884" class="card-body">• Primary Medallion HNS Lakehouse Bucket</text>
+  <text x="52" y="902" class="card-body">• Denodo Delta Cache HNS Bucket</text>
+  <text x="52" y="920" class="card-body">• 30-Yr GxP WORM Archive Bucket</text>
+
+  <rect x="424" y="800" width="372" height="144" rx="10" fill="#ffffff" stroke="#a7f3d0" stroke-width="1.5"/>
+  <image href="{icons['bigquery']}" x="438" y="814" width="40" height="40"/>
+  <text x="490" y="824" class="card-title">bigquery &amp; bigquerystorage APIs</text>
+  <text x="490" y="841" class="card-mono">Denodo 8.0 Native Cache ONLY</text>
+  <text x="438" y="866" class="card-body">• Dataset: denodo_vdp_cache (EU)</text>
+  <text x="438" y="884" class="card-body">• 50 GB BI Engine In-Memory Acceleration</text>
+  <text x="438" y="902" class="card-body">• High-Throughput gRPC StorageReadAPI</text>
+  <text x="438" y="920" class="card-body">• Accessible solely by sa-denodo-vdp</text>
+
+  <rect x="810" y="800" width="372" height="144" rx="10" fill="#ffffff" stroke="#a7f3d0" stroke-width="1.5"/>
+  <image href="{icons['key_management_service']}" x="824" y="814" width="40" height="40"/>
+  <image href="{icons['secret_manager']}" x="870" y="814" width="40" height="40"/>
+  <text x="920" y="824" class="card-title">cloudkms &amp; secretmanager</text>
+  <text x="920" y="841" class="card-mono">90-Day CMEK &amp; Vault Secrets</text>
+  <text x="824" y="866" class="card-body">• Encrypts all 4 GCS Buckets &amp; HNS folders</text>
+  <text x="824" y="884" class="card-body">• Encrypts HA Cloud SQL Hive Metastore</text>
+  <text x="824" y="902" class="card-body">• Encrypts BigQuery Cache &amp; Hyperdisks</text>
+  <text x="824" y="920" class="card-body">• Stores Hive Metastore &amp; JDBC passwords</text>
+
+  <rect x="1196" y="800" width="366" height="144" rx="10" fill="#ffffff" stroke="#a7f3d0" stroke-width="1.5"/>
+  <image href="{icons['google_kubernetes_engine']}" x="1210" y="814" width="40" height="40"/>
+  <image href="{icons['cloud_sql']}" x="1256" y="814" width="40" height="40"/>
+  <text x="1306" y="824" class="card-title">container, sqladmin &amp; file APIs</text>
+  <text x="1306" y="841" class="card-mono">Control Plane &amp; Managed Storage</text>
+  <text x="1210" y="866" class="card-body">• Databricks GKE Enterprise node management</text>
+  <text x="1210" y="884" class="card-body">• Regional HA Cloud SQL PG 15 control plane</text>
+  <text x="1210" y="902" class="card-body">• Filestore Enterprise NFSv4.1 control plane</text>
+  <text x="1210" y="920" class="card-body">• All protected inside VPC-SC service perimeter</text>
+
+  <!-- Vertical Flow Arrows Between Horizontal Layers -->
+  <path d="M 278 238 L 278 268" stroke="#1d4ed8" stroke-width="2.5" marker-end="url(#arrow-blue)"/>
+  <path d="M 776 238 L 776 268" stroke="#1d4ed8" stroke-width="2.5" marker-end="url(#arrow-blue)"/>
+  <path d="M 184 518 L 184 536" stroke="#059669" stroke-width="2.5" marker-end="url(#arrow-green)"/>
+  <path d="M 490 518 L 490 536" stroke="#1d4ed8" stroke-width="2.5" marker-end="url(#arrow-blue)"/>
+  <path d="M 184 720 L 184 752" stroke="#059669" stroke-width="2.5" marker-end="url(#arrow-green)"/>
+  <path d="M 1562 652 L 1572 652 L 1572 187 L 1564 187" fill="none" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="6,4" marker-end="url(#arrow-red)"/>
 </svg>
 """
 
 
-def build_svg_3_storage_and_folder_governance(icons: dict[str, str]) -> str:
-    return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1560 820" width="100%" height="100%">
+def build_svg_3_storage_and_folder_governance_horizontal(icons: dict[str, str]) -> str:
+    return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 960" width="100%" height="100%">
   <defs>
     <style>
       .title {{ font: 700 22px 'Google Sans', 'Inter', 'Segoe UI', Arial, sans-serif; fill: #0f172a; }}
       .subtitle {{ font: 500 13px 'Google Sans', 'Inter', 'Segoe UI', Arial, sans-serif; fill: #475569; }}
       .card-title {{ font: 700 13px 'Google Sans', 'Inter', 'Segoe UI', Arial, sans-serif; fill: #0f172a; }}
       .card-body {{ font: 500 11px 'Google Sans', 'Inter', 'Segoe UI', Arial, sans-serif; fill: #334155; }}
-      .card-mono {{ font: 600 10.5px 'Roboto Mono', monospace; fill: #0f172a; }}
-      .badge {{ font: 700 10px 'Roboto Mono', monospace; fill: #ffffff; }}
+      .card-mono {{ font: 600 10.2px 'Roboto Mono', monospace; fill: #0f172a; }}
+      .badge {{ font: 700 10.5px 'Roboto Mono', monospace; fill: #ffffff; }}
     </style>
-    <filter id="shadow" x="-4%" y="-4%" width="108%" height="110%">
-      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#0f172a" flood-opacity="0.08"/>
+    <filter id="shadow" x="-2%" y="-4%" width="104%" height="110%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0f172a" flood-opacity="0.07"/>
     </filter>
     <marker id="arrow-green" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
       <path d="M 0 1 L 10 5 L 0 9 z" fill="#059669"/>
     </marker>
     <marker id="arrow-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-      <path d="M 0 1 L 10 5 L 0 9 z" fill="#1a73e8"/>
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#1d4ed8"/>
     </marker>
   </defs>
 
-  <rect width="1560" height="820" rx="16" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
+  <rect width="1600" height="960" rx="16" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
 
   <!-- Header -->
-  <rect x="20" y="18" width="1520" height="68" rx="12" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5" filter="url(#shadow)"/>
-  <rect x="20" y="18" width="10" height="68" rx="4" fill="#059669"/>
-  <text x="48" y="48" class="title">Storage Accounts (Zero-Key GCP Service Accounts) &amp; GCS HNS Managed Folder Hierarchy</text>
-  <text x="48" y="70" class="subtitle">Replaces Legacy Shared Storage Account Keys &amp; ADLS Gen2 POSIX ACLs with Subfolder-Scoped google_storage_managed_folder_iam_member Bindings</text>
+  <rect x="20" y="16" width="1560" height="64" rx="12" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="20" y="16" width="10" height="64" rx="4" fill="#059669"/>
+  <text x="46" y="44" class="title">Storage Accounts (Zero-Key Service Accounts) &amp; GCS HNS Managed Folder Hierarchy (Horizontal Layered View)</text>
+  <text x="46" y="65" class="subtitle">Layer 1: 7 Dedicated Zero-Key GCP Service Accounts  |  Layer 2: Primary GCS HNS Bucket &amp; 12 Subfolder ACLs  |  Layer 3: Companion &amp; 30-Yr GxP WORM Buckets</text>
 
-  <!-- Left Column: 7 Least-Privilege Service Accounts -->
-  <rect x="24" y="104" width="440" height="692" rx="12" fill="#eff6ff" stroke="#2563eb" stroke-width="2" filter="url(#shadow)"/>
-  <rect x="24" y="104" width="440" height="40" rx="10" fill="#1d4ed8"/>
-  <text x="42" y="129" class="badge" style="font-size:12.5px;">7 DEDICATED GCP SERVICE ACCOUNTS (ZERO KEYS)</text>
+  <!-- ===================================================================== -->
+  <!-- HORIZONTAL LAYER 1 (TOP): 7 DEDICATED ZERO-KEY SERVICE ACCOUNTS       -->
+  <!-- ===================================================================== -->
+  <rect x="20" y="94" width="1560" height="176" rx="12" fill="#eff6ff" stroke="#2563eb" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="20" y="94" width="1560" height="34" rx="10" fill="#1d4ed8"/>
+  <text x="40" y="116" class="badge" style="font-size:12px;">LAYER 1 — IDENTITY &amp; ENCRYPTION TIER: 7 Dedicated GCP Service Accounts (Zero Static Keys) + Cloud KMS CMEK (90-Day Rotation)</text>
 
-  <!-- SA Cards -->
-  <rect x="42" y="158" width="404" height="72" rx="8" fill="#ffffff" stroke="#93c5fd" stroke-width="1.5"/>
-  <image href="{icons['identity_and_access_management']}" x="54" y="174" width="36" height="36"/>
-  <text x="102" y="178" class="card-title">1. rd-lakehouse-sa-sts-ingest</text>
-  <text x="102" y="195" class="card-mono">Role: roles/storage.objectCreator (STS Landing Only)</text>
-  <text x="102" y="212" class="card-body">Cross-cloud ingestion identity; cannot read Gold tables</text>
+  <!-- 6 Horizontal Cards for the 7 Service Accounts -->
+  <rect x="36" y="140" width="242" height="116" rx="8" fill="#ffffff" stroke="#93c5fd" stroke-width="1.5"/>
+  <image href="{icons['identity_and_access_management']}" x="46" y="148" width="30" height="30"/>
+  <text x="84" y="162" class="card-title">1. sa-sts-ingest</text>
+  <text x="84" y="177" class="card-mono" style="font-size:9.5px;">roles/storage.objectCreator</text>
+  <text x="46" y="198" class="card-body">Scoped strictly to STS</text>
+  <text x="46" y="214" class="card-body">Landing bucket; zero read</text>
+  <text x="46" y="230" class="card-body">access to Silver/Gold.</text>
 
-  <rect x="42" y="242" width="404" height="72" rx="8" fill="#ffffff" stroke="#93c5fd" stroke-width="1.5"/>
-  <image href="{icons['identity_and_access_management']}" x="54" y="258" width="36" height="36"/>
-  <text x="102" y="262" class="card-title">2. rd-lakehouse-sa-uc-master &amp; dbx-uc</text>
-  <text x="102" y="279" class="card-mono">Role: Unity Catalog Storage Credential Master</text>
-  <text x="102" y="296" class="card-body">Vends short-lived downscoped OAuth tokens to clusters</text>
+  <rect x="290" y="140" width="246" height="116" rx="8" fill="#ffffff" stroke="#93c5fd" stroke-width="1.5"/>
+  <image href="{icons['identity_and_access_management']}" x="300" y="148" width="30" height="30"/>
+  <text x="338" y="162" class="card-title">2 &amp; 3. sa-uc-master &amp; dbx</text>
+  <text x="338" y="177" class="card-mono" style="font-size:9.5px;">Unity Catalog Master SAs</text>
+  <text x="300" y="198" class="card-body">Vends short-lived OAuth</text>
+  <text x="300" y="214" class="card-body">tokens for 9 Unity Catalog</text>
+  <text x="300" y="230" class="card-body">External Locations.</text>
 
-  <rect x="42" y="326" width="404" height="82" rx="8" fill="#ffffff" stroke="#059669" stroke-width="2"/>
-  <image href="{icons['identity_and_access_management']}" x="54" y="346" width="36" height="36"/>
-  <text x="102" y="348" class="card-title">3. rd-lakehouse-sa-clinical-ddf (Mesh Node 1)</text>
-  <text x="102" y="365" class="card-mono">Role: roles/storage.objectAdmin (Managed Folder)</text>
-  <text x="102" y="382" class="card-body">Scoped STRICTLY to bronze|silver|gold/clinical_ddf/</text>
-  <text x="102" y="397" class="card-body">Zero access to RWD or CMC Manufacturing folders</text>
+  <rect x="548" y="140" width="246" height="116" rx="8" fill="#ffffff" stroke="#059669" stroke-width="2"/>
+  <image href="{icons['identity_and_access_management']}" x="558" y="148" width="30" height="30"/>
+  <text x="596" y="162" class="card-title">4. sa-clinical-ddf</text>
+  <text x="596" y="177" class="card-mono" style="font-size:9.5px;">Managed Folder objectAdmin</text>
+  <text x="558" y="198" class="card-mono" style="font-size:9.5px;">*/clinical_ddf/ ONLY</text>
+  <text x="558" y="216" class="card-body">Isolates Clinical DDF,</text>
+  <text x="558" y="232" class="card-body">CDISC &amp; PK/PD Biomarkers.</text>
 
-  <rect x="42" y="420" width="404" height="82" rx="8" fill="#ffffff" stroke="#059669" stroke-width="2"/>
-  <image href="{icons['identity_and_access_management']}" x="54" y="440" width="36" height="36"/>
-  <text x="102" y="442" class="card-title">4. rd-lakehouse-sa-rwd-cohorts (Mesh Node 2)</text>
-  <text x="102" y="459" class="card-mono">Role: roles/storage.objectAdmin (Managed Folder)</text>
-  <text x="102" y="476" class="card-body">Scoped STRICTLY to bronze|silver|gold/real_world_data/</text>
-  <text x="102" y="491" class="card-body">Zero access to Clinical DDF or CMC folders</text>
+  <rect x="806" y="140" width="246" height="116" rx="8" fill="#ffffff" stroke="#059669" stroke-width="2"/>
+  <image href="{icons['identity_and_access_management']}" x="816" y="148" width="30" height="30"/>
+  <text x="854" y="162" class="card-title">5. sa-rwd-cohorts</text>
+  <text x="854" y="177" class="card-mono" style="font-size:9.5px;">Managed Folder objectAdmin</text>
+  <text x="816" y="198" class="card-mono" style="font-size:9.5px;">*/real_world_data/ ONLY</text>
+  <text x="816" y="216" class="card-body">Isolates Real-World Data</text>
+  <text x="816" y="232" class="card-body">&amp; Synthetic Control Arms.</text>
 
-  <rect x="42" y="514" width="404" height="82" rx="8" fill="#ffffff" stroke="#059669" stroke-width="2"/>
-  <image href="{icons['identity_and_access_management']}" x="54" y="534" width="36" height="36"/>
-  <text x="102" y="536" class="card-title">5. rd-lakehouse-sa-cmc-mfg (Mesh Node 3)</text>
-  <text x="102" y="553" class="card-mono">Role: roles/storage.objectAdmin (Managed Folder)</text>
-  <text x="102" y="570" class="card-body">Scoped STRICTLY to bronze|silver|gold/cmc_manufacturing/</text>
-  <text x="102" y="585" class="card-body">Zero access to unblinded Clinical DDF folders</text>
+  <rect x="1064" y="140" width="246" height="116" rx="8" fill="#ffffff" stroke="#059669" stroke-width="2"/>
+  <image href="{icons['identity_and_access_management']}" x="1074" y="148" width="30" height="30"/>
+  <text x="1112" y="162" class="card-title">6. sa-cmc-mfg</text>
+  <text x="1112" y="177" class="card-mono" style="font-size:9.5px;">Managed Folder objectAdmin</text>
+  <text x="1074" y="198" class="card-mono" style="font-size:9.5px;">*/cmc_manufacturing/ ONLY</text>
+  <text x="1074" y="216" class="card-body">Isolates CMC Batch</text>
+  <text x="1074" y="232" class="card-body">Genealogy &amp; Stability QC.</text>
 
-  <rect x="42" y="608" width="404" height="172" rx="8" fill="#ffffff" stroke="#7c3aed" stroke-width="2"/>
-  <image href="{icons['identity_and_access_management']}" x="54" y="626" width="36" height="36"/>
-  <text x="100" y="630" class="card-title">6. rd-lakehouse-denodo-vdp-mvp (Denodo VDP)</text>
-  <text x="100" y="647" class="card-mono" style="font-size:10px;">• roles/bigquery.jobUser (Project)</text>
-  <text x="100" y="663" class="card-mono" style="font-size:10px;">• roles/bigquery.readSessionUser (StorageReadAPI)</text>
-  <text x="100" y="679" class="card-mono" style="font-size:10px;">• roles/bigquery.dataEditor (denodo_vdp_cache)</text>
-  <text x="100" y="695" class="card-mono" style="font-size:10px;">• roles/storage.objectAdmin (Denodo Cache Bucket)</text>
-  <rect x="54" y="708" width="380" height="58" rx="6" fill="#f5f3ff" stroke="#ddd6fe"/>
-  <text x="64" y="726" class="card-title">Why This Matters for GxP &amp; Least Privilege:</text>
-  <text x="64" y="742" class="card-body">Denodo VDP cannot bypass Databricks Unity Catalog to read raw</text>
-  <text x="64" y="756" class="card-body">Bronze/Silver GCS files; it queries Databricks via JDBC only.</text>
+  <rect x="1322" y="140" width="242" height="116" rx="8" fill="#ffffff" stroke="#7c3aed" stroke-width="2"/>
+  <image href="{icons['identity_and_access_management']}" x="1332" y="148" width="30" height="30"/>
+  <text x="1370" y="162" class="card-title">7. sa-denodo-vdp-mvp</text>
+  <text x="1370" y="177" class="card-mono" style="font-size:9.5px;">BQ &amp; GCS Cache Admin ONLY</text>
+  <text x="1332" y="198" class="card-body">Scoped to denodo_vdp_cache</text>
+  <text x="1332" y="214" class="card-body">&amp; Denodo Cache Bucket; no</text>
+  <text x="1332" y="230" class="card-body">raw GCS Lakehouse read.</text>
 
-  <!-- Right Area: GCS HNS Managed Folder Tree & 4 Purpose-Built Buckets -->
-  <rect x="494" y="104" width="1042" height="692" rx="12" fill="#ecfdf5" stroke="#059669" stroke-width="2" filter="url(#shadow)"/>
-  <rect x="494" y="104" width="1042" height="40" rx="10" fill="#059669"/>
-  <text x="514" y="129" class="badge" style="font-size:12.5px;">PRIMARY GCS HNS BUCKET: gs://gke-demos-363017-rd-lakehouse-hns (hierarchical_namespace = true)</text>
+  <!-- ===================================================================== -->
+  <!-- HORIZONTAL LAYER 2 (MIDDLE): PRIMARY GCS HNS MEDALLION LAKEHOUSE      -->
+  <!-- ===================================================================== -->
+  <rect x="20" y="292" width="1560" height="422" rx="12" fill="#ecfdf5" stroke="#059669" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="20" y="292" width="1560" height="34" rx="10" fill="#059669"/>
+  <text x="40" y="314" class="badge" style="font-size:12px;">LAYER 2 — PRIMARY GCS HNS MEDALLION LAKEHOUSE: gs://gke-demos-363017-rd-lakehouse-hns (hierarchical_namespace = true | 12 Managed Folders)</text>
 
-  <!-- 3 Data Mesh Columns inside Primary HNS Bucket -->
-  <!-- Column 1: Clinical Development (DDF) -->
-  <rect x="514" y="160" width="320" height="360" rx="10" fill="#ffffff" stroke="#10b981" stroke-width="2" filter="url(#shadow)"/>
-  <rect x="514" y="160" width="320" height="32" rx="8" fill="#047857"/>
-  <text x="528" y="181" class="badge">MESH NODE 1: CLINICAL DEVELOPMENT</text>
-  <image href="{icons['cloud_storage']}" x="528" y="204" width="36" height="36"/>
-  <text x="574" y="218" class="card-title">google_storage_managed_folder</text>
-  <text x="574" y="234" class="card-mono">IAM: sa-clinical-ddf (objectAdmin)</text>
+  <!-- Vertical IAM Binding Arrows from Layer 1 SAs into Layer 2 Domain Folders -->
+  <path d="M 671 256 L 671 290" stroke="#059669" stroke-width="3" marker-end="url(#arrow-green)"/>
+  <path d="M 929 256 L 929 290" stroke="#059669" stroke-width="3" marker-end="url(#arrow-green)"/>
+  <path d="M 1187 256 L 1187 290" stroke="#059669" stroke-width="3" marker-end="url(#arrow-green)"/>
 
-  <rect x="528" y="252" width="292" height="76" rx="6" fill="#fef3c7" stroke="#f59e0b"/>
-  <text x="540" y="272" class="card-mono">bronze/clinical_ddf/</text>
-  <text x="540" y="289" class="card-body">• cdisc_sdtm_raw/ (SDTM DM, EX, AE, LB)</text>
-  <text x="540" y="305" class="card-body">• genomics_ngs_fastq/ (ctDNA &amp; RNASeq)</text>
-  <text x="540" y="320" class="card-body">• ivrs_randomization_feeds/</text>
+  <!-- Horizontal Band 2.1: BRONZE MEDALLION LAYER -->
+  <rect x="38" y="338" width="1180" height="112" rx="10" fill="#ffffff" stroke="#f59e0b" stroke-width="2"/>
+  <rect x="38" y="338" width="170" height="112" rx="8" fill="#fef3c7" stroke="#f59e0b"/>
+  <image href="{icons['cloud_storage']}" x="52" y="354" width="36" height="36"/>
+  <text x="52" y="408" class="card-title" style="fill:#92400e;">BRONZE TIER</text>
+  <text x="52" y="424" class="card-mono" style="fill:#78350f;">Raw Landing</text>
+  <text x="52" y="439" class="card-body" style="fill:#92400e;">Managed Folders</text>
 
-  <rect x="528" y="338" width="292" height="76" rx="6" fill="#f1f5f9" stroke="#64748b"/>
-  <text x="540" y="358" class="card-mono">silver/clinical_ddf/</text>
-  <text x="540" y="375" class="card-body">• silver_cdisc_dm_subjects (Delta)</text>
-  <text x="540" y="391" class="card-body">• silver_biomarker_pkpd (Delta)</text>
-  <text x="540" y="406" class="card-body">• Liquid Clustered by (studyid, molecule_id)</text>
+  <rect x="222" y="348" width="318" height="92" rx="6" fill="#fffbeb" stroke="#fcd34d"/>
+  <text x="234" y="368" class="card-mono">bronze/clinical_ddf/  [sa-clinical-ddf]</text>
+  <text x="234" y="388" class="card-body">• cdisc_sdtm_raw/ (SDTM DM, EX, AE, LB)</text>
+  <text x="234" y="406" class="card-body">• genomics_ngs_fastq/ (ctDNA &amp; RNASeq)</text>
+  <text x="234" y="424" class="card-body">• ivrs_randomization_feeds/</text>
 
-  <rect x="528" y="424" width="292" height="80" rx="6" fill="#fef9c3" stroke="#eab308"/>
-  <text x="540" y="444" class="card-mono">gold/clinical_ddf/</text>
-  <text x="540" y="461" class="card-body">• gold_clinical_efficacy_summary (ADaM)</text>
-  <text x="540" y="477" class="card-body">• gold_biomarker_response_matrix</text>
-  <text x="540" y="493" class="card-mono">Exposed via Unity Catalog + Denodo VDP</text>
+  <rect x="554" y="348" width="318" height="92" rx="6" fill="#fffbeb" stroke="#fcd34d"/>
+  <text x="566" y="368" class="card-mono">bronze/real_world_data/  [sa-rwd-cohorts]</text>
+  <text x="566" y="388" class="card-body">• ehr_claims_ingest/ (FHIR R4 / OMOP)</text>
+  <text x="566" y="406" class="card-body">• oncology_disease_registries/</text>
+  <text x="566" y="424" class="card-body">• tokenized_patient_linkage/</text>
 
-  <!-- Column 2: Real-World Evidence (RWD) -->
-  <rect x="854" y="160" width="320" height="360" rx="10" fill="#ffffff" stroke="#10b981" stroke-width="2" filter="url(#shadow)"/>
-  <rect x="854" y="160" width="320" height="32" rx="8" fill="#047857"/>
-  <text x="868" y="181" class="badge">MESH NODE 2: REAL-WORLD EVIDENCE</text>
-  <image href="{icons['cloud_storage']}" x="868" y="204" width="36" height="36"/>
-  <text x="914" y="218" class="card-title">google_storage_managed_folder</text>
-  <text x="914" y="234" class="card-mono">IAM: sa-rwd-cohorts (objectAdmin)</text>
+  <rect x="886" y="348" width="318" height="92" rx="6" fill="#fffbeb" stroke="#fcd34d"/>
+  <text x="898" y="368" class="card-mono">bronze/cmc_manufacturing/  [sa-cmc-mfg]</text>
+  <text x="898" y="388" class="card-body">• erp_batch_genealogy/ (WERKS/MATNR/CHARG)</text>
+  <text x="898" y="406" class="card-body">• lims_analytical_results/ (SEC-HPLC, pH)</text>
+  <text x="898" y="424" class="card-body">• bioreactor_historian_telemetry/</text>
 
-  <rect x="868" y="252" width="292" height="76" rx="6" fill="#fef3c7" stroke="#f59e0b"/>
-  <text x="880" y="272" class="card-mono">bronze/real_world_data/</text>
-  <text x="880" y="289" class="card-body">• ehr_claims_ingest/ (FHIR R4 / OMOP)</text>
-  <text x="880" y="305" class="card-body">• oncology_disease_registries/</text>
-  <text x="880" y="320" class="card-body">• tokenized_patient_linkage/</text>
+  <!-- Horizontal Band 2.2: SILVER MEDALLION LAYER -->
+  <rect x="38" y="462" width="1180" height="112" rx="10" fill="#ffffff" stroke="#64748b" stroke-width="2"/>
+  <rect x="38" y="462" width="170" height="112" rx="8" fill="#f1f5f9" stroke="#64748b"/>
+  <image href="{icons['cloud_storage']}" x="52" y="478" width="36" height="36"/>
+  <text x="52" y="532" class="card-title" style="fill:#1e293b;">SILVER TIER</text>
+  <text x="52" y="548" class="card-mono" style="fill:#334155;">Harmonized Delta</text>
+  <text x="52" y="563" class="card-body" style="fill:#334155;">Liquid Clustered</text>
 
-  <rect x="868" y="338" width="292" height="76" rx="6" fill="#f1f5f9" stroke="#64748b"/>
-  <text x="880" y="358" class="card-mono">silver/real_world_data/</text>
-  <text x="880" y="375" class="card-body">• silver_rwd_ehs_cohorts (OMOP CDM v5.4)</text>
-  <text x="880" y="391" class="card-body">• silver_rwd_synthetic_control (Delta)</text>
-  <text x="880" y="406" class="card-body">• Propensity-score matched cohorts</text>
+  <rect x="222" y="472" width="318" height="92" rx="6" fill="#f8fafc" stroke="#cbd5e1"/>
+  <text x="234" y="492" class="card-mono">silver/clinical_ddf/  [sa-clinical-ddf]</text>
+  <text x="234" y="512" class="card-body">• silver_cdisc_dm_subjects (Delta Lake)</text>
+  <text x="234" y="530" class="card-body">• silver_biomarker_pkpd (Delta Lake)</text>
+  <text x="234" y="548" class="card-mono">CLUSTER BY (studyid, molecule_id)</text>
 
-  <rect x="868" y="424" width="292" height="80" rx="6" fill="#fef9c3" stroke="#eab308"/>
-  <text x="880" y="444" class="card-mono">gold/real_world_data/</text>
-  <text x="880" y="461" class="card-body">• gold_rwd_external_control_arms</text>
-  <text x="880" y="477" class="card-body">• gold_so_care_hazard_ratios</text>
-  <text x="880" y="493" class="card-mono">Joined in Denodo dv_rd_molecule_360</text>
+  <rect x="554" y="472" width="318" height="92" rx="6" fill="#f8fafc" stroke="#cbd5e1"/>
+  <text x="566" y="492" class="card-mono">silver/real_world_data/  [sa-rwd-cohorts]</text>
+  <text x="566" y="512" class="card-body">• silver_rwd_ehs_cohorts (OMOP CDM v5.4)</text>
+  <text x="566" y="530" class="card-body">• silver_rwd_synthetic_control (Delta Lake)</text>
+  <text x="566" y="548" class="card-mono">Propensity-score matched cohorts</text>
 
-  <!-- Column 3: CMC Biologics & Manufacturing -->
-  <rect x="1194" y="160" width="322" height="360" rx="10" fill="#ffffff" stroke="#10b981" stroke-width="2" filter="url(#shadow)"/>
-  <rect x="1194" y="160" width="322" height="32" rx="8" fill="#047857"/>
-  <text x="1208" y="181" class="badge">MESH NODE 3: CMC MANUFACTURING</text>
-  <image href="{icons['cloud_storage']}" x="1208" y="204" width="36" height="36"/>
-  <text x="1254" y="218" class="card-title">google_storage_managed_folder</text>
-  <text x="1254" y="234" class="card-mono">IAM: sa-cmc-mfg (objectAdmin)</text>
+  <rect x="886" y="472" width="318" height="92" rx="6" fill="#f8fafc" stroke="#cbd5e1"/>
+  <text x="898" y="492" class="card-mono">silver/cmc_manufacturing/  [sa-cmc-mfg]</text>
+  <text x="898" y="512" class="card-body">• silver_cmc_batch_genealogy (Delta Lake)</text>
+  <text x="898" y="530" class="card-body">• silver_cmc_stability_ich_q1a (Delta Lake)</text>
+  <text x="898" y="548" class="card-mono">Links Drug Substance -&gt; Clinical Lot ID</text>
 
-  <rect x="1208" y="252" width="294" height="76" rx="6" fill="#fef3c7" stroke="#f59e0b"/>
-  <text x="1220" y="272" class="card-mono">bronze/cmc_manufacturing/</text>
-  <text x="1220" y="289" class="card-body">• erp_batch_genealogy/ (WERKS/MATNR/CHARG)</text>
-  <text x="1220" y="305" class="card-body">• lims_analytical_results/ (SEC-HPLC, pH)</text>
-  <text x="1220" y="320" class="card-body">• bioreactor_historian_telemetry/</text>
+  <!-- Horizontal Band 2.3: GOLD MEDALLION LAYER -->
+  <rect x="38" y="586" width="1180" height="112" rx="10" fill="#ffffff" stroke="#eab308" stroke-width="2"/>
+  <rect x="38" y="586" width="170" height="112" rx="8" fill="#fef9c3" stroke="#eab308"/>
+  <image href="{icons['cloud_storage']}" x="52" y="602" width="36" height="36"/>
+  <text x="52" y="656" class="card-title" style="fill:#854d0e;">GOLD TIER</text>
+  <text x="52" y="672" class="card-mono" style="fill:#713f12;">Curated Products</text>
+  <text x="52" y="687" class="card-body" style="fill:#854d0e;">Unity + Denodo</text>
 
-  <rect x="1208" y="338" width="294" height="76" rx="6" fill="#f1f5f9" stroke="#64748b"/>
-  <text x="1220" y="358" class="card-mono">silver/cmc_manufacturing/</text>
-  <text x="1220" y="375" class="card-body">• silver_cmc_batch_genealogy (Delta)</text>
-  <text x="1220" y="391" class="card-body">• silver_cmc_stability_ich_q1a (Delta)</text>
-  <text x="1220" y="406" class="card-body">• Links Drug Substance -&gt; Clinical Lot ID</text>
+  <rect x="222" y="596" width="318" height="92" rx="6" fill="#fefce8" stroke="#fde047"/>
+  <text x="234" y="616" class="card-mono">gold/clinical_ddf/  [sa-clinical-ddf]</text>
+  <text x="234" y="636" class="card-body">• gold_clinical_efficacy_summary (ADaM)</text>
+  <text x="234" y="654" class="card-body">• gold_biomarker_response_matrix</text>
+  <text x="234" y="672" class="card-mono">Exposed via Unity Catalog + Denodo VDP</text>
 
-  <rect x="1208" y="424" width="294" height="80" rx="6" fill="#fef9c3" stroke="#eab308"/>
-  <text x="1220" y="444" class="card-mono">gold/cmc_manufacturing/</text>
-  <text x="1220" y="461" class="card-body">• gold_cmc_lot_release_certificates</text>
-  <text x="1220" y="477" class="card-body">• gold_cmc_shelf_life_regression</text>
-  <text x="1220" y="493" class="card-mono">Joined in dv_cmc_clinical_lot_trace</text>
+  <rect x="554" y="596" width="318" height="92" rx="6" fill="#fefce8" stroke="#fde047"/>
+  <text x="566" y="616" class="card-mono">gold/real_world_data/  [sa-rwd-cohorts]</text>
+  <text x="566" y="636" class="card-body">• gold_rwd_external_control_arms</text>
+  <text x="566" y="654" class="card-body">• gold_so_care_hazard_ratios</text>
+  <text x="566" y="672" class="card-mono">Joined in Denodo dv_rd_molecule_360</text>
 
-  <!-- Bottom Row: System Managed Folders & Companion Buckets -->
-  <rect x="514" y="538" width="490" height="238" rx="10" fill="#ffffff" stroke="#059669" stroke-width="1.5" filter="url(#shadow)"/>
-  <text x="532" y="564" class="card-title">Shared Platform Managed Folders (Inside Primary HNS Bucket)</text>
-  <text x="532" y="588" class="card-mono">• hive_warehouse/    -&gt; External Hive Metastore (Cloud SQL HA) root URI</text>
-  <text x="532" y="610" class="card-mono">• unity_catalog/     -&gt; Unity Catalog managed tables &amp; lineage metadata</text>
-  <text x="532" y="632" class="card-mono">• denodo_cache/      -&gt; Denodo 8.0 MPP Parquet/Delta spill directory</text>
-  <rect x="532" y="650" width="454" height="110" rx="8" fill="#f0fdf4" stroke="#86efac"/>
-  <text x="546" y="672" class="card-title">Why GCS Hierarchical Namespace (HNS) Is Mandatory:</text>
-  <text x="546" y="692" class="card-body">1. Atomic O(1) RenameFolder: Eliminates slow O(N) object copy+delete</text>
-  <text x="546" y="708" class="card-body">   during Spark task/job commits and Delta Lake _delta_log checkpoints.</text>
-  <text x="546" y="726" class="card-body">2. 5x–8x Higher Per-Prefix QPS: Eliminates HTTP 429 throttling on deep</text>
-  <text x="546" y="742" class="card-body">   partition trees (studyid=.../molecule_id=.../).</text>
+  <rect x="886" y="596" width="318" height="92" rx="6" fill="#fefce8" stroke="#fde047"/>
+  <text x="898" y="616" class="card-mono">gold/cmc_manufacturing/  [sa-cmc-mfg]</text>
+  <text x="898" y="636" class="card-body">• gold_cmc_lot_release_certificates</text>
+  <text x="898" y="654" class="card-body">• gold_cmc_shelf_life_regression</text>
+  <text x="898" y="672" class="card-mono">Joined in dv_cmc_clinical_lot_trace</text>
 
-  <rect x="1024" y="538" width="492" height="238" rx="10" fill="#ffffff" stroke="#dc2626" stroke-width="2" filter="url(#shadow)"/>
-  <image href="{icons['cloud_storage']}" x="1040" y="556" width="42" height="42"/>
-  <image href="{icons['key_management_service']}" x="1040" y="612" width="42" height="42"/>
-  <text x="1096" y="566" class="card-title">Companion Regulatory &amp; Caching Buckets</text>
-  <text x="1096" y="588" class="card-mono">1. gs://*-sts-landing (Cross-Cloud STS Ingest)</text>
-  <text x="1096" y="608" class="card-mono">2. gs://*-denodo-cache (Dedicated HNS Cache Bucket)</text>
-  <text x="1096" y="628" class="card-mono">3. gs://*-gxp-worm-archive (30-Yr GxP WORM Lock)</text>
-  <rect x="1040" y="650" width="460" height="110" rx="8" fill="#fef2f2" stroke="#fecaca"/>
-  <text x="1054" y="672" class="card-title" style="fill:#991b1b;">30-Year GxP WORM Regulatory Lock (21 CFR Part 11 / Annex 11):</text>
-  <text x="1054" y="692" class="card-mono" style="fill:#7f1d1d;">retention_policy {{ retention_period = 946728000 # 30 Years }}</text>
-  <text x="1054" y="712" class="card-body" style="fill:#7f1d1d;">Guarantees immutable, tamper-proof preservation of locked clinical</text>
-  <text x="1054" y="728" class="card-body" style="fill:#7f1d1d;">trial datasets (CDISC SDTM/ADaM) and CMC batch release certificates</text>
-  <text x="1054" y="744" class="card-body" style="fill:#7f1d1d;">with Object Versioning + Cloud KMS CMEK encryption.</text>
+  <!-- Right Panel in Layer 2: Shared System Managed Folders & HNS Benefits -->
+  <rect x="1232" y="338" width="330" height="360" rx="10" fill="#ffffff" stroke="#059669" stroke-width="2"/>
+  <text x="1248" y="364" class="card-title">Shared Platform Managed Folders</text>
+  <rect x="1248" y="378" width="298" height="40" rx="6" fill="#f0fdf4" stroke="#86efac"/>
+  <text x="1258" y="396" class="card-mono">10. hive_warehouse/</text>
+  <text x="1258" y="411" class="card-body">External Hive Metastore (Cloud SQL) root</text>
+  <rect x="1248" y="426" width="298" height="40" rx="6" fill="#f0fdf4" stroke="#86efac"/>
+  <text x="1258" y="444" class="card-mono">11. unity_catalog/</text>
+  <text x="1258" y="459" class="card-body">Unity Catalog managed tables &amp; lineage</text>
+  <rect x="1248" y="474" width="298" height="40" rx="6" fill="#f0fdf4" stroke="#86efac"/>
+  <text x="1258" y="492" class="card-mono">12. denodo_cache/</text>
+  <text x="1258" y="507" class="card-body">Denodo 8.0 MPP Parquet/Delta spill</text>
+  <rect x="1248" y="526" width="298" height="156" rx="8" fill="#ecfdf5" stroke="#10b981"/>
+  <text x="1260" y="548" class="card-title">Why GCS HNS Is Mandatory:</text>
+  <text x="1260" y="568" class="card-body">1. Atomic O(1) RenameFolder:</text>
+  <text x="1260" y="584" class="card-body">   Eliminates slow O(N) copy+delete</text>
+  <text x="1260" y="600" class="card-body">   during Spark job commits and Delta</text>
+  <text x="1260" y="616" class="card-body">   Lake _delta_log compactions.</text>
+  <text x="1260" y="638" class="card-body">2. 5x-8x Higher Per-Prefix QPS:</text>
+  <text x="1260" y="654" class="card-body">   Eliminates HTTP 429 throttling on</text>
+  <text x="1260" y="670" class="card-body">   deep partition trees.</text>
 
-  <!-- Clean orthogonal connector from Service Accounts to Primary HNS Bucket -->
-  <path d="M 446 365 L 490 365" stroke="#059669" stroke-width="3" marker-end="url(#arrow-green)"/>
-  <path d="M 446 460 L 490 460" stroke="#059669" stroke-width="3" marker-end="url(#arrow-green)"/>
-  <path d="M 446 555 L 490 555" stroke="#059669" stroke-width="3" marker-end="url(#arrow-green)"/>
+  <!-- ===================================================================== -->
+  <!-- HORIZONTAL LAYER 3 (BOTTOM): COMPANION & 30-YR GxP WORM BUCKETS       -->
+  <!-- ===================================================================== -->
+  <rect x="20" y="734" width="1560" height="206" rx="12" fill="#fef2f2" stroke="#dc2626" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="20" y="734" width="1560" height="34" rx="10" fill="#dc2626"/>
+  <text x="40" y="756" class="badge" style="font-size:12px;">LAYER 3 — COMPANION INGESTION, CACHING, POSIX SCRATCH &amp; 30-YEAR GxP WORM REGULATORY ARCHIVE TIER</text>
+
+  <rect x="38" y="780" width="366" height="144" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+  <image href="{icons['cloud_storage']}" x="52" y="794" width="38" height="38"/>
+  <text x="102" y="804" class="card-title">1. Cross-Cloud STS Landing Bucket</text>
+  <text x="102" y="821" class="card-mono">gs://*-rd-lakehouse-hns-sts-landing</text>
+  <text x="52" y="846" class="card-body">• Event-driven Storage Transfer Service (STS)</text>
+  <text x="52" y="864" class="card-body">• TLS 1.3 transport + SHA-256 manifest checks</text>
+  <text x="52" y="882" class="card-body">• Write-only for sa-sts-ingest (objectCreator)</text>
+  <text x="52" y="900" class="card-body">• Encrypted with Cloud KMS CMEK (90d rotation)</text>
+
+  <rect x="420" y="780" width="366" height="144" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+  <image href="{icons['cloud_storage']}" x="434" y="794" width="38" height="38"/>
+  <text x="484" y="804" class="card-title">2. Denodo Delta Cache HNS Bucket</text>
+  <text x="484" y="821" class="card-mono">gs://*-rd-lakehouse-hns-denodo-cache</text>
+  <text x="434" y="846" class="card-body">• hierarchical_namespace {{ enabled = true }}</text>
+  <text x="434" y="864" class="card-body">• Dedicated secondary Parquet/Delta cache</text>
+  <text x="434" y="882" class="card-body">  for Denodo 8.0 VDP (1,584 ms / 4.29x speedup)</text>
+  <text x="434" y="900" class="card-mono">• IAM: sa-denodo-vdp-mvp (objectAdmin ONLY)</text>
+
+  <rect x="802" y="780" width="420" height="144" rx="10" fill="#ffffff" stroke="#dc2626" stroke-width="2"/>
+  <image href="{icons['cloud_storage']}" x="816" y="794" width="38" height="38"/>
+  <image href="{icons['key_management_service']}" x="860" y="794" width="38" height="38"/>
+  <text x="908" y="804" class="card-title" style="fill:#991b1b;">3. 30-Yr GxP WORM Regulatory Archive</text>
+  <text x="908" y="821" class="card-mono" style="fill:#7f1d1d;">gs://*-gxp-worm-archive (ARCHIVE Class)</text>
+  <text x="816" y="846" class="card-mono" style="fill:#7f1d1d;">• retention_policy {{ retention_period = 946728000 }}</text>
+  <text x="816" y="864" class="card-body" style="fill:#7f1d1d;">• Enforces 30-Year immutable WORM lock (21 CFR Part 11</text>
+  <text x="816" y="882" class="card-body" style="fill:#7f1d1d;">  &amp; EU Annex 11) with Object Versioning + CMEK</text>
+  <text x="816" y="900" class="card-body" style="fill:#7f1d1d;">• Stores locked CDISC submission &amp; CMC release records</text>
+
+  <rect x="1238" y="780" width="324" height="144" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+  <image href="{icons['filestore']}" x="1252" y="794" width="38" height="38"/>
+  <text x="1302" y="804" class="card-title">4. Filestore Enterprise (Optional)</text>
+  <text x="1302" y="821" class="card-mono">NFSv4.1 /rd_posix_scratch (1 TB)</text>
+  <text x="1252" y="846" class="card-body">• Regional High-Availability tier</text>
+  <text x="1252" y="864" class="card-body">• Provides strict POSIX flock/fcntl</text>
+  <text x="1252" y="882" class="card-body">  byte-range locking for legacy SAS</text>
+  <text x="1252" y="900" class="card-body">  and C++ statistical binaries</text>
 </svg>
 """
 
@@ -701,20 +795,39 @@ def main() -> None:
     svg2 = ASSETS_DIR / "02_zero_trust_network_and_vpc_sc_topology.svg"
     svg3 = ASSETS_DIR / "03_storage_accounts_and_hns_folder_governance.svg"
 
-    svg1.write_text(build_svg_1_end_to_end(icons), encoding="utf-8")
-    svg2.write_text(build_svg_2_network_and_vpc_sc(icons), encoding="utf-8")
-    svg3.write_text(build_svg_3_storage_and_folder_governance(icons), encoding="utf-8")
+    svg1.write_text(build_svg_1_end_to_end_horizontal(icons), encoding="utf-8")
+    svg2.write_text(build_svg_2_network_and_vpc_sc_horizontal(icons), encoding="utf-8")
+    svg3.write_text(build_svg_3_storage_and_folder_governance_horizontal(icons), encoding="utf-8")
+    print("Generated 3 HORIZONTAL-LAYERED SVG blueprints in", ASSETS_DIR)
 
-    # Also copy the two generated raster images for reference
-    shutil.copyfile(
-        "/usr/local/google/home/saffi/.gemini/jetski/brain/9fe31b76-de83-4647-a7f0-e19255f0a5e8/gcp_databricks_denodo_architecture_1791284857318.jpg",
-        ASSETS_DIR / "gcp_databricks_denodo_overview.jpg",
-    )
-    shutil.copyfile(
-        "/usr/local/google/home/saffi/.gemini/jetski/brain/9fe31b76-de83-4647-a7f0-e19255f0a5e8/gcp_network_storage_governance_1791284948287.jpg",
-        ASSETS_DIR / "gcp_network_storage_governance.jpg",
-    )
-    print("Generated 3 SVG blueprints and copied 2 JPG diagrams into", ASSETS_DIR)
+    import subprocess
+    import shutil
+
+    chrome_bin = shutil.which("google-chrome") or "/usr/bin/google-chrome"
+    if pathlib.Path(chrome_bin).exists():
+        specs = [
+            (svg1, "1600,1040"),
+            (svg2, "1600,980"),
+            (svg3, "1600,960"),
+        ]
+        for svg_path, win_size in specs:
+            png_path = svg_path.with_suffix(".png")
+            subprocess.run(
+                [
+                    chrome_bin,
+                    "--headless",
+                    "--disable-gpu",
+                    "--no-sandbox",
+                    "--hide-scrollbars",
+                    f"--window-size={win_size}",
+                    f"--screenshot={png_path}",
+                    f"file://{svg_path}",
+                ],
+                check=True,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+        print("Rendered 3 HORIZONTAL-LAYERED PNG blueprints in", ASSETS_DIR)
 
 
 if __name__ == "__main__":
