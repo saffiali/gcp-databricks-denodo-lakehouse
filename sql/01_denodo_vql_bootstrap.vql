@@ -1,0 +1,84 @@
+-- =============================================================================
+-- Denodo 9.0 Virtual DataPort (VDP) on Enterprise Base OS Images — Bootstrap VQL
+-- =============================================================================
+-- Architectural Separation:
+--   1. Primary Lakehouse Compute & Medallion Tables: Databricks on GCP
+--      (queried via Simba Spark JDBC -> Serverless/Pro SQL Warehouse)
+--   2. Native Cache Engine ONLY: Google BigQuery (`denodo_vdp_cache`)
+--      (accelerated by 50 GB BI Engine + gRPC StorageReadAPI)
+-- =============================================================================
+
+CREATE OR REPLACE DATABASE enterprise_unified_vdb
+  'Enterprise Data Mesh Semantic Virtualization Layer (Denodo 9.0 on Base OS Images)';
+
+CONNECT DATABASE enterprise_unified_vdb;
+
+-- -----------------------------------------------------------------------------
+-- 1. JDBC Data Source -> Databricks on GCP Serverless/Pro SQL Warehouse
+-- -----------------------------------------------------------------------------
+CREATE OR REPLACE DATASOURCE JDBC ds_databricks_gcp_lakehouse
+  DRIVERCLASSNAME = 'com.simba.spark.jdbc.Driver'
+  DATABASEURI = 'jdbc:databricks://1234567890123456.1.gcp.databricks.com:443/lakehouse_medallion;transportMode=http;ssl=1;AuthMech=3;UID=token;httpPath=/sql/1.0/warehouses/0123456789abcdef'
+  USERNAME = 'token'
+  USERPASSWORD = '${DATABRICKS_OAUTH_OR_PAT_SECRET}' encrypted
+  CLASSPATH = 'simba-spark-jdbc-2.6.26'
+  DATABASENAME = 'databricks'
+  DATABASEVERSION = '14_3'
+  FETCHSIZE = 10000
+  VALIDATIONQUERY = 'SELECT 1'
+  INITIALSIZE = 4
+  MAXACTIVE = 50;
+
+-- -----------------------------------------------------------------------------
+-- 2. Native Cache Engine -> Google BigQuery (`denodo_vdp_cache` ONLY)
+--    Replaces legacy Snowflake cache with gRPC StorageReadAPI + BI Engine
+-- -----------------------------------------------------------------------------
+ALTER DATABASE enterprise_unified_vdb
+  CACHE CONFIG (
+    ENABLED = TRUE
+    DATASOURCE = ds_bigquery_vdp_cache
+    DRIVERCLASSNAME = 'com.simba.googlebigquery.jdbc.Driver'
+    DATABASEURI = 'jdbc:bigquery://https://www.googleapis.com/bigquery/v2:443;ProjectId=your-gcp-project-id;OAuthType=3;DefaultDataset=denodo_vdp_cache;EnableHighThroughputAPI=1;HighThroughputActivationRatio=1;HighThroughputMinTableSize=100;'
+    MAINTENANCE = ON
+    TIMETOLIVE = 86400
+  );
+
+-- -----------------------------------------------------------------------------
+-- 3. Federated Cross-Domain Derived View (`dv_enterprise_customer_360`)
+--    Joins Customer Analytics, Global Supply Chain & Enterprise Finance
+--    with Dynamic Role-Based PII Masking and Cross-Border Residency Filtering
+-- -----------------------------------------------------------------------------
+CREATE OR REPLACE VIEW dv_enterprise_customer_360
+  FOLDER = '/03_derived_views/cross_domain'
+  CACHE FULL
+  TIMETOLIVEINCACHE = 86400
+  BATCHSIZEINCACHE = 50000
+AS SELECT
+    c.customer_id,
+    c.account_segment,
+    c.country,
+    c.region_code,
+    CASE
+      WHEN GETVAR('USER_ROLE') = 'AUTHORIZED_DATA_STEWARD' THEN c.account_executive_unmasked
+      ELSE '***MASKED-PII*** (' || c.pii_masked_tier || ')'
+    END AS account_owner_governed,
+    s.order_batch_id,
+    s.erp_order_number,
+    s.fulfillment_center,
+    s.on_time_delivery_pct,
+    s.inventory_turnover_ratio,
+    f.net_retention_score_pct,
+    f.annual_contract_value_usd,
+    f.credit_risk_rating,
+    f.forecasted_12m_ltv_usd
+FROM bv_databricks_silver_customer_accounts c
+INNER JOIN bv_databricks_silver_supply_chain_orders s
+  ON c.order_batch_id = s.order_batch_id
+  AND c.customer_id = s.customer_id
+INNER JOIN bv_databricks_silver_finance_revenue_metrics f
+  ON c.customer_id = f.customer_id
+WHERE (
+  GETVAR('CLIENT_JURISDICTION') = 'GLOBAL_STANDARD' AND c.region_code <> 'RESTRICTED'
+) OR (
+  GETVAR('CLIENT_JURISDICTION') = 'REGIONAL_LOCAL_AUTHORIZED'
+);
