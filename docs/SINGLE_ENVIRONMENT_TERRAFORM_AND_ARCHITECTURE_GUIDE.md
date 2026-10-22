@@ -1,6 +1,8 @@
 # Single-Environment Architecture & Terraform Reference Guide
 
 > **Visual Reference Blueprint** — Databricks on GCP + **Denodo 9.0 VM Scale Set on Enterprise Base OS Images** (`google_compute_region_instance_group_manager`) + BigQuery Native VDP Cache (`denodo_vdp_cache`) + Standard GCS Managed Folders (`HNS Disabled for Databricks Compatibility`) + VPC Service Controls
+>
+> **Looking for the Step-by-Step Installation Runbook?** See [**`STEP_BY_STEP_COMPONENT_INSTALLATION_GUIDE.md`**](./STEP_BY_STEP_COMPONENT_INSTALLATION_GUIDE.md).
 
 ---
 
@@ -111,13 +113,11 @@ sequenceDiagram
 
 ---
 
-## 5. Terraform Module Matrix
+## 5. Step-by-Step Component Installation Matrix
 
-| Module Path | Key Provisioned Resources |
-| :--- | :--- |
-| `terraform/modules/network_and_psc` | Custom VPC, 4 Private Subnets, Cloud Router/NAT, 5 Firewall Rules, Restricted Google APIs DNS (`199.36.153.4/30`), VPC-SC Perimeter |
-| `terraform/modules/gcs_medallion_lakehouse` | 90-day Cloud KMS KeyRing + CryptoKey, 5 Zero-Key SAs, 4 Standard GCS Buckets (**HNS disabled**), 12 Managed Folders |
-| `terraform/modules/external_hive_metastore` | Regional HA Cloud SQL PostgreSQL 15 instance + Private Service Access |
-| `terraform/modules/databricks_workspace` | Next-Gen N4/C4/M3/Z3 Node Pools + 9 Unity Catalog External Locations |
-| `terraform/modules/bigquery_biglake` | `denodo_vdp_cache` Dataset (CMEK), `50 GB` BI Engine Reservation, 2 Clustered Cache Metadata Tables |
-| `terraform/modules/denodo_vdp_platform` | Enterprise Base OS Image (`rhel-9`), CMEK Secrets, Shielded Instance Template, Regional MIG (`2–6` VMs), CPU Autoscaler (`70%`), Internal NLB |
+| Install Order | Component Name | Terraform Target(s) & Script | Full Guide Link |
+| :--- | :--- | :--- | :--- |
+| **Component 1** | **Networking, Subnets, Private DNS & VPC-SC** | `terraform -chdir=terraform apply -target=module.network_and_psc` | [Component 1 Runbook](./STEP_BY_STEP_COMPONENT_INSTALLATION_GUIDE.md#component-1--networking-modulenetwork_and_psc) |
+| **Component 2** | **GCS Managed Folder & Bucket Structure** | `terraform -chdir=terraform apply -target=module.gcs_medallion_lakehouse` | [Component 2 Runbook](./STEP_BY_STEP_COMPONENT_INSTALLATION_GUIDE.md#component-2--gcs-managed-folder--bucket-structure-modulegcs_medallion_lakehouse) |
+| **Component 3** | **Databricks VMs, Unity Catalog & Hive Metastore** | `terraform -chdir=terraform apply -target=module.external_hive_metastore -target=module.databricks_workspace` | [Component 3 Runbook](./STEP_BY_STEP_COMPONENT_INSTALLATION_GUIDE.md#component-3--databricks-vms-unity-catalog--external-hive-metastore-moduleexternal_hive_metastore--moduledatabricks_workspace) |
+| **Component 4** | **Denodo 9.0 on GCE Managed Instance Group (MIG)** | `terraform -chdir=terraform apply -target=module.bigquery_biglake -target=module.denodo_vdp_platform` + `./scripts/deploy_denodo_vm_scaleset.sh` | [Component 4 Runbook](./STEP_BY_STEP_COMPONENT_INSTALLATION_GUIDE.md#component-4--denodo-90-on-gce-managed-instance-group-mig-modulebigquery_biglake--moduledenodo_vdp_platform) |

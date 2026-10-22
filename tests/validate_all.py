@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Automated 20-Check Architecture, Terraform & Denodo 9.0 Base-Image VM Scale Set Verification Suite."""
+"""Automated 22-Check Architecture, Terraform, Step-by-Step Component Installer & Denodo 9.0 MIG Verification Suite."""
 
 import os
 import pathlib
@@ -200,7 +200,48 @@ def run_checks() -> int:
         "Executable 5-step Denodo 9.0 Base-Image VM Scale Set staging & rolling replacement CLI verified",
     )
 
-    # 19. Check 4 Horizontal-Layered SVG & PNG Architecture Diagrams in assets/
+    # 19. Check Step-by-Step Component Installer CLI (scripts/install_components_step_by_step.sh)
+    step_cli = REPO_ROOT / "scripts" / "install_components_step_by_step.sh"
+    step_cli_text = step_cli.read_text(encoding="utf-8") if step_cli.is_file() else ""
+    record(
+        "Step-by-Step Component Installer CLI (scripts/install_components_step_by_step.sh)",
+        step_cli.is_file()
+        and os.access(step_cli, os.X_OK)
+        and all(
+            target in step_cli_text
+            for target in [
+                "-target=module.network_and_psc",
+                "-target=module.gcs_medallion_lakehouse",
+                "-target=module.external_hive_metastore",
+                "-target=module.databricks_workspace",
+                "-target=module.bigquery_biglake",
+                "-target=module.denodo_vdp_platform",
+            ]
+        ),
+        "Executable 4-component step-by-step installer script verified",
+    )
+
+    # 20. Check Step-by-Step Component Installation Guide (docs/STEP_BY_STEP_COMPONENT_INSTALLATION_GUIDE.md)
+    step_doc = REPO_ROOT / "docs" / "STEP_BY_STEP_COMPONENT_INSTALLATION_GUIDE.md"
+    step_doc_text = step_doc.read_text(encoding="utf-8") if step_doc.is_file() else ""
+    readme_text = (REPO_ROOT / "README.md").read_text(encoding="utf-8")
+    record(
+        "Step-by-Step Component Installation Documentation (README.md & docs/STEP_BY_STEP_COMPONENT_INSTALLATION_GUIDE.md)",
+        step_doc.is_file()
+        and all(
+            section in step_doc_text
+            for section in [
+                "Component 1 — Networking",
+                "Component 2 — GCS Managed Folder & Bucket Structure",
+                "Component 3 — Databricks VMs, Unity Catalog & External Hive Metastore",
+                "Component 4 — Denodo 9.0 on GCE Managed Instance Group (MIG)",
+            ]
+        )
+        and "STEP_BY_STEP_COMPONENT_INSTALLATION_GUIDE.md" in readme_text,
+        "4-component step-by-step documentation & README integration verified",
+    )
+
+    # 21. Check 4 Horizontal-Layered SVG & PNG Architecture Diagrams in assets/
     svg_files = [
         "01_end_to_end_lakehouse_and_denodo_architecture.svg",
         "02_zero_trust_network_and_vpc_sc_topology.svg",
@@ -220,7 +261,7 @@ def run_checks() -> int:
         "4 Horizontal-Layered SVG + 4 High-DPI PNG blueprints verified",
     )
 
-    # 20. Verify ZERO forbidden customer terms, real project IDs, Marketplace image IDs, or PAT secrets across the repo
+    # 22. Verify ZERO forbidden customer terms, real project IDs, Marketplace image IDs, or PAT secrets across the repo
     leaked_hits: list[str] = []
     for path in sorted(REPO_ROOT.rglob("*")):
         if not path.is_file() or ".git/" in str(path):
